@@ -1,0 +1,13 @@
+[package]
+name = "jp_rust"
+version = "0.1.0"
+edition = "2021"
+
+[lib]
+name = "jp_rust"
+crate-type = ["staticlib", "cdylib", "rlib"]
+
+[profile.release]
+lto = true
+codegen-units = 1
+panic = "abort"

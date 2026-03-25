@@ -1,0 +1,90 @@
+V "GNAT Lib v15"
+P ZX
+
+RN
+RV NO_DIRECT_BOOLEAN_OPERATORS
+RV NO_LONG_LONG_INTEGERS
+RV NO_RECURSION
+
+U jp_ada%b		jp_ada.adb		11e7a7ad NE OO PK
+W interfaces%s		interfac.ads		interfac.ali
+
+U jp_ada%s		jp_ada.ads		01e7dc39 EE NE OO PK
+W interfaces%s		interfac.ads		interfac.ali
+
+D interfac.ads		20260209135214 9111f9c1 interfaces%s
+D jp_ada.ads		20260323202910 90f625f8 jp_ada%s
+D jp_ada.adb		20260323202910 10007b94 jp_ada%b
+D system.ads		20260209135214 14286b0f system%s
+G a e
+G c Z s b [gcd jp_ada 18 13 none]
+G c Z s b [smallest_prime_divisor jp_ada 21 13 none]
+G c Z s b [euler_totient jp_ada 24 13 none]
+G c Z s b [solve_diophantine jp_ada 27 13 none]
+G c Z s s [dio_resultIP jp_ada 8 9 none]
+X 1 interfac.ads
+47K9*Interfaces 247e15 2|1w6 4r19 5r18 6r19 3|1w6 2r10 3r10 4r10
+68I9*Integer_64<long_long_integer> 2|6r30 3|4r21
+81M9*Unsigned_8 2|5r29 3|3r21
+95M9*Unsigned_64 2|4r30 3|2r21
+X 2 jp_ada.ads
+3K9*JP_Ada 29l5 29e11 3|6b14 151l5 151t11
+4M12*U64{1|95M9} 18r25 18r37 21r41 21r53 24r32 24r44 27r42 3|8r19 8r26 9r21
+. 9r28 27r25 27r37 28r11 29r11 30r11 40r41 40r53 41r11 43r15 60r32 60r44
+. 61r16 62r11 63r11 86r14 93r42 127r31 131r26 133r26
+5M12*U8{1|81M9} 9r18 3|105r31 112r31 120r31 142r25
+6I12*I64{1|68I9} 10r11 11r11 12r11 13r11 14r11 3|95r18 95r26 99r16 100r16
+. 101r16 113r26 113r37 121r24 131r17 132r28 133r17 143r18 144r18 145r18 147r18
+8R9*Dio_Result 15e14 16r26 27r54 3|93r54 94r15
+9m7*Bool_Wyn{5M12} 3|94m30 105m19 112m19 120m19 142m13
+10i7*X{6I12} 3|94m45 121m19 143m13
+11i7*Y{6I12} 3|94m53 113m19 144m13
+12i7*A{6I12} 3|94m61 145m13
+13i7*B{6I12} 3|94m69 146m13
+14i7*D{6I12} 3|94m77 147m13
+18V13*Gcd{4M12} 18>18 18>21 19i<c,jp_ada_gcd>22 3|27b13 38l8 38t11 126s31
+18m18 A{4M12} 3|27b18 28r18
+18m21 B{4M12} 3|27b21 29r18
+21V13*Smallest_Prime_Divisor{4M12} 21>37 22i<c,jp_ada_smallest_prime_divisor>22
+. 3|40b13 58l8 58t30
+21m37 N{4M12} 3|40b37 43r10 46r11 50r18 51r14 57r14
+24V13*Euler_Totient{4M12} 24>28 25i<c,jp_ada_euler_totient>22 3|60b13 91l8
+. 91t21
+24m28 N{4M12} 3|60b28 61r23 62r18 65r10
+27V13*Solve_Diophantine{8R9} 27>32 27>35 27>38 28i<c,jp_ada_solve_diophantine>22
+. 3|93b13 149l8 149t25
+27m32 A{4M12} 3|93b32 103r10 110r10 119r20 121r33 126r36 131r22 145r23
+27m35 B{4M12} 3|93b35 95r31 103r20 111r20 113r42 118r10 126r39
+27m38 C{4M12} 3|93b38 104r13 111r14 113r31 119r14 121r29 127r25 133r22
+X 3 jp_ada.adb
+8m4 Two{2|4M12} 46r17 47r17 54r19 69r17 70r38 71r23 72r22 83r19
+9m4 Three{2|4M12} 41r18 63r18
+11V13 Ext_Gcd{long_long_integer} 11b13 11>22 11>25 11<48 11<51 21s12 25l8
+. 25t15 135s12
+11i22 A{long_long_integer} 18r17 21r24 23r18
+11i25 B{long_long_integer} 15r10 21r21 21r30 23r22
+11i48 X{long_long_integer} 16m10 22m7
+11i51 Y{long_long_integer} 17m10 23m7
+12i7 X1{long_long_integer} 21m33 21r33 23r12
+12i11 Y1{long_long_integer} 21m37 21r37 22r12 23r27
+13i7 D{long_long_integer} 21m7 24r14
+28m7 X{2|4M12} 34r15 35m10 37r14
+29m7 Y{2|4M12} 32r13 33r15 34m10 34r21
+30m7 T{2|4M12} 33m10 35r15
+41m7 D{2|4M12} 50r13 50r22 51r20 52r20 54m10 54r15
+61m7 Result{2|4M12} 70m10 70r20 70r29 78m13 78r23 78r32 87m10 87r20 87r29
+. 90r14
+62m7 X{2|4M12} 69r11 71r17 72m13 72r18 76r18 77r14 79r20 80m16 80r21 86r10
+. 87r38
+63m7 P{2|4M12} 76r13 76r22 77r20 78r41 79r26 80r25 83m10 83r15
+94r7 Out_R{2|8R9} 105m13 107r17 112m13 113m13 115r17 120m13 121m13 123r17
+. 128r17 142m7 143m7 144m7 145m7 146m7 147m7 148r14
+95i7 B_Signed{2|6I12} 132r17 146r18
+96i7 X0{long_long_integer} 135m77 135r77 138m10 138r17 143r23
+97i7 Y0{long_long_integer} 135m81 135r81 139m10 139r17 144r23
+98i7 D{long_long_integer} 126m7 127r10 127r36 131r31 132r33 133r31 135m7
+. 136r10 137m10 137r16 147r23
+99i7 A_Prim{2|6I12} 131m7 135r40
+100i7 B_Prim{2|6I12} 132m7 135r68
+101i7 C_Prim{2|6I12} 133m7 143r29 144r29
+

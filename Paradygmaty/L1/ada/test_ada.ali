@@ -1,0 +1,116 @@
+V "GNAT Lib v15"
+M P W=b
+P ZX
+
+RN
+RV NO_IO
+RV NO_DYNAMIC_SIZED_OBJECTS
+
+U test_ada%b		test_ada.adb		29a5dbd4 NE OO SU
+W ada%s			ada.ads			ada.ali
+Z ada.strings.text_buffers%s  a-sttebu.adb	a-sttebu.ali
+W ada.text_io%s		a-textio.adb		a-textio.ali
+W ada_wrappers%s	ada_wrappers.adb	ada_wrappers.ali
+W interfaces%s		interfac.ads		interfac.ali
+W jp_ada%s		jp_ada.adb		jp_ada.ali
+Z system.concat_2%s	s-conca2.adb		s-conca2.ali
+Z system.concat_5%s	s-conca5.adb		s-conca5.ali
+Z system.img_lli%s	s-imglli.ads		s-imglli.ali
+Z system.img_llu%s	s-imgllu.ads		s-imgllu.ali
+Z system.unsigned_types%s  s-unstyp.ads		s-unstyp.ali
+
+D ada.ads		20260209135214 76789da1 ada%s
+D a-except.ads		20260209135214 e7970cd9 ada.exceptions%s
+D a-ioexce.ads		20260209135214 40018c65 ada.io_exceptions%s
+D a-stream.ads		20260209135214 17477cbd ada.streams%s
+D a-string.ads		20260209135214 90ac6797 ada.strings%s
+D a-sttebu.ads		20260209135214 f1ad67a2 ada.strings.text_buffers%s
+D a-stuten.ads		20260209135214 c6ced0ae ada.strings.utf_encoding%s
+D a-tags.ads		20260209135214 fbca0ad5 ada.tags%s
+D a-textio.ads		20260209135214 34ef47de ada.text_io%s
+D a-unccon.ads		20260209135214 0e9b276f ada.unchecked_conversion%s
+D ada_wrappers.ads	20260319143226 24491fd9 ada_wrappers%s
+D interfac.ads		20260209135214 9111f9c1 interfaces%s
+D i-cstrea.ads		20260209135214 ffd01b9d interfaces.c_streams%s
+D jp_ada.ads		20260323202910 90f625f8 jp_ada%s
+D system.ads		20260209135214 14286b0f system%s
+D s-conca2.ads		20260209135214 b5fb73f7 system.concat_2%s
+D s-conca5.ads		20260209135214 4099d1db system.concat_5%s
+D s-crtl.ads		20260209135214 beb39b9e system.crtl%s
+D s-exctab.ads		20260209135214 91bef6ef system.exception_table%s
+D s-ficobl.ads		20260209135214 dc5161d4 system.file_control_block%s
+D s-imagei.ads		20260209135214 5e131ce0 system.image_i%s
+D s-imageu.ads		20260209135214 b0b50650 system.image_u%s
+D s-imglli.ads		20260209135214 d88f4f3b system.img_lli%s
+D s-imgllu.ads		20260209135214 55ba53d8 system.img_llu%s
+D s-parame.ads		20260209135214 3597fc11 system.parameters%s
+D s-putima.ads		20260209135214 17291fe4 system.put_images%s
+D s-secsta.ads		20260209135214 578279f5 system.secondary_stack%s
+D s-soflin.ads		20260209135214 5d88fdea system.soft_links%s
+D s-stache.ads		20260209135214 0b81c1fe system.stack_checking%s
+D s-stalib.ads		20260209135214 1c9580f6 system.standard_library%s
+D s-stoele.ads		20260209135214 ccded4e8 system.storage_elements%s
+D s-traent.ads		20260209135214 c81cbf8c system.traceback_entries%s
+D s-unstyp.ads		20260209135214 fa2a7f59 system.unsigned_types%s
+D s-valspe.ads		20260209135214 f810d31c system.val_spec%s
+D s-vaispe.ads		20260209135214 8280550e system.value_i_spec%s
+D s-vauspe.ads		20260209135214 89269ba5 system.value_u_spec%s
+D s-vs_lli.ads		20260209135214 b945cf7d system.vs_lli%s
+D s-vs_llu.ads		20260209135214 8f3536c5 system.vs_llu%s
+D s-wchcon.ads		20260209135214 d9032363 system.wch_con%s
+D test_ada.adb		20260323202910 38e45fea test_ada%b
+G a e
+G c Z b b [test_ada standard 6 11 none]
+G r c none [test_ada standard 6 11 none] [gcd jp_ada 18 13 none]
+G r c none [test_ada standard 6 11 none] [smallest_prime_divisor jp_ada 21 13 none]
+G r c none [test_ada standard 6 11 none] [euler_totient jp_ada 24 13 none]
+G r c none [test_ada standard 6 11 none] [solve_diophantine jp_ada 27 13 none]
+G r c none [test_ada standard 6 11 none] [wrap_c_gcd ada_wrappers 8 13 none]
+G r c none [test_ada standard 6 11 none] [wrap_c_smallest_prime_divisor ada_wrappers 9 13 none]
+G r c none [test_ada standard 6 11 none] [wrap_c_euler_totient ada_wrappers 10 13 none]
+G r c none [test_ada standard 6 11 none] [wrap_c_solve_diophantine ada_wrappers 11 13 none]
+G r c none [test_ada standard 6 11 none] [wrap_rust_gcd ada_wrappers 13 13 none]
+G r c none [test_ada standard 6 11 none] [wrap_rust_smallest_prime_divisor ada_wrappers 14 13 none]
+G r c none [test_ada standard 6 11 none] [wrap_rust_euler_totient ada_wrappers 15 13 none]
+G r c none [test_ada standard 6 11 none] [wrap_rust_solve_diophantine ada_wrappers 16 13 none]
+X 1 ada.ads
+18K9*Ada 22e8 40|1r6 7r8
+X 9 a-textio.ads
+58K13*Text_IO 785e16 40|1w10 7r12
+565U14*Put_Line 40|15s10 17s10 21s4 23s4 24s4 25s4 28s4 29s4 30s4 33s4 34s4
+. 35s4
+X 11 ada_wrappers.ads
+4K9*Ada_Wrappers 17e17 40|4w6 28r46 29r46 30r46 31r34 33r49 34r49 35r49 36r37
+8V13*Wrap_C_Gcd{5M12} 40|28s59
+9V13*Wrap_C_Smallest_Prime_Divisor{5M12} 40|29s59
+10V13*Wrap_C_Euler_Totient{5M12} 40|30s59
+11V13*Wrap_C_Solve_Diophantine{6R12} 40|31s47
+13V13*Wrap_Rust_Gcd{5M12} 40|33s62
+14V13*Wrap_Rust_Smallest_Prime_Divisor{5M12} 40|34s62
+15V13*Wrap_Rust_Euler_Totient{5M12} 40|35s62
+16V13*Wrap_Rust_Solve_Diophantine{6R12} 40|36s50
+X 12 interfac.ads
+47K9*Interfaces 247e15 40|2w6 8r13 9r19 10r19
+68I9*Integer_64<long_long_integer> 40|10r30
+81M9*Unsigned_8 40|8r24
+95M9*Unsigned_64 40|9r30
+X 14 jp_ada.ads
+3K9*JP_Ada 29e11 40|3w6 12r44 23r40 24r40 25r40 26r28
+6I12*I64{12|68I9}
+8R9*Dio_Result 15e14 40|12r51
+9m7*Bool_Wyn{5M12} 40|14r12
+10i7*X{6I12} 40|17r49
+11i7*Y{6I12} 40|17r75
+18V13*Gcd{4M12} 19i<c,jp_ada_gcd>22 40|23s47
+21V13*Smallest_Prime_Divisor{4M12} 22i<c,jp_ada_smallest_prime_divisor>22
+. 40|24s47
+24V13*Euler_Totient{4M12} 25i<c,jp_ada_euler_totient>22 40|25s47
+27V13*Solve_Diophantine{8R9} 28i<c,jp_ada_solve_diophantine>22 40|26s35
+X 40 test_ada.adb
+6U11*Test_Ada 6b11 37l5 37t13
+9M12 U64{12|95M9} 23r29 24r29 25r29 28r35 29r35 30r35 33r38 34r38 35r38
+10I12 I64{12|68I9} 17r36 17r62
+12U14 Print_Dio 12b14 12>25 12>40 19l8 19t17 26s4 31s4 36s4
+12a25 Name{string} 15r20 17r20
+12r40 R{14|8R9} 14r10 17r47 17r73
+

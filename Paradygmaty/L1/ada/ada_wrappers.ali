@@ -1,0 +1,93 @@
+V "GNAT Lib v15"
+P ZX
+
+RN
+
+U ada_wrappers%b	ada_wrappers.adb	57a0d1de NE OO PK
+W interfaces%s		interfac.ads		interfac.ali
+W jp_ada%s		jp_ada.adb		jp_ada.ali
+
+U ada_wrappers%s	ada_wrappers.ads	25aec3e0 EE NE OO PK
+W interfaces%s		interfac.ads		interfac.ali
+W jp_ada%s		jp_ada.adb		jp_ada.ali
+
+D ada_wrappers.ads	20260319143226 24491fd9 ada_wrappers%s
+D ada_wrappers.adb	20260323202910 720e123e ada_wrappers%b
+D interfac.ads		20260209135214 9111f9c1 interfaces%s
+D jp_ada.ads		20260323202910 90f625f8 jp_ada%s
+D system.ads		20260209135214 14286b0f system%s
+G a e
+G c Z s b [wrap_c_gcd ada_wrappers 8 13 none]
+G c Z s b [wrap_c_smallest_prime_divisor ada_wrappers 9 13 none]
+G c Z s b [wrap_c_euler_totient ada_wrappers 10 13 none]
+G c Z s b [wrap_c_solve_diophantine ada_wrappers 11 13 none]
+G c Z s b [wrap_rust_gcd ada_wrappers 13 13 none]
+G c Z s b [wrap_rust_smallest_prime_divisor ada_wrappers 14 13 none]
+G c Z s b [wrap_rust_euler_totient ada_wrappers 15 13 none]
+G c Z s b [wrap_rust_solve_diophantine ada_wrappers 16 13 none]
+X 1 ada_wrappers.ads
+4K9*Ada_Wrappers 17l5 17e17 2|4b14 69l5 69t17
+5M12*U64{3|95M9} 8r32 8r44 9r48 9r60 10r39 10r51 11r49 13r35 13r47 14r51
+. 14r63 15r42 15r54 16r52 2|5r27 5r39 8r43 8r55 11r34 11r46 14r44 17r30 17r42
+. 20r46 20r58 23r37 23r49 26r47 29r32 29r44 34r48 34r60 39r39 39r51 44r49
+. 49r35 49r47 54r51 54r63 59r42 59r54 64r52
+6R12*Dio_Result{4|8R9} 11r61 16r64 2|14r56 26r59 44r61 64r64
+8V13*Wrap_C_Gcd{5M12} 8>25 8>28 2|29b13 32l8 32t18
+8m25 A{5M12} 2|29b25 31r21
+8m28 B{5M12} 2|29b28 31r24
+9V13*Wrap_C_Smallest_Prime_Divisor{5M12} 9>44 2|34b13 37l8 37t37
+9m44 N{5M12} 2|34b44 36r40
+10V13*Wrap_C_Euler_Totient{5M12} 10>35 2|39b13 42l8 42t28
+10m35 N{5M12} 2|39b35 41r31
+11V13*Wrap_C_Solve_Diophantine{6R12} 11>39 11>42 11>45 2|44b13 47l8 47t32
+11m39 A{5M12} 2|44b39 46r35
+11m42 B{5M12} 2|44b42 46r38
+11m45 C{5M12} 2|44b45 46r41
+13V13*Wrap_Rust_Gcd{5M12} 13>28 13>31 2|49b13 52l8 52t21
+13m28 A{5M12} 2|49b28 51r24
+13m31 B{5M12} 2|49b31 51r27
+14V13*Wrap_Rust_Smallest_Prime_Divisor{5M12} 14>47 2|54b13 57l8 57t40
+14m47 N{5M12} 2|54b47 56r43
+15V13*Wrap_Rust_Euler_Totient{5M12} 15>38 2|59b13 62l8 62t31
+15m38 N{5M12} 2|59b38 61r34
+16V13*Wrap_Rust_Solve_Diophantine{6R12} 16>42 16>45 16>48 2|64b13 67l8 67t35
+16m42 A{5M12} 2|64b42 66r38
+16m45 B{5M12} 2|64b45 66r41
+16m48 C{5M12} 2|64b48 66r44
+X 2 ada_wrappers.adb
+5V13 C_Gcd{1|5M12} 5>20 5>23 6b<c,NWD>22 31s14
+5m20 A{1|5M12}
+5m23 B{1|5M12}
+8V13 C_Smallest_Prime_Divisor{1|5M12} 8>39 9b<c,NWD_prime>22 36s14
+8m39 N{1|5M12}
+11V13 C_Euler_Totient{1|5M12} 11>30 12b<c,euler_totient>22 41s14
+11m30 N{1|5M12}
+14V13 C_Solve_Diophantine{1|6R12} 14>34 14>37 14>40 15b<c,diophantine>22
+. 46s14
+14m34 A{1|5M12}
+14m37 B{1|5M12}
+14m40 C{1|5M12}
+17V13 Rust_Gcd{1|5M12} 17>23 17>26 18b<c,jp_rust_gcd>22 51s14
+17m23 A{1|5M12}
+17m26 B{1|5M12}
+20V13 Rust_Smallest_Prime_Divisor{1|5M12} 20>42 21b<c,jp_rust_smallest_prime_divisor>22
+. 56s14
+20m42 N{1|5M12}
+23V13 Rust_Euler_Totient{1|5M12} 23>33 24b<c,jp_rust_euler_totient>22 61s14
+23m33 N{1|5M12}
+26V13 Rust_Solve_Diophantine{1|6R12} 26>37 26>40 26>43 27b<c,jp_rust_solve_diophantine>22
+. 66s14
+26m37 A{1|5M12}
+26m40 B{1|5M12}
+26m43 C{1|5M12}
+X 3 interfac.ads
+47K9*Interfaces 1|1w6 5r19 2|1w6 3|247e15
+95M9*Unsigned_64 1|5r30
+X 4 jp_ada.ads
+3K9*JP_Ada 1|2w6 6r26 2|2w6 4|29e11
+8R9*Dio_Result 1|6r33 4|15e14
+18V13*Gcd{4M12} 19i<c,jp_ada_gcd>22
+21V13*Smallest_Prime_Divisor{4M12} 22i<c,jp_ada_smallest_prime_divisor>22
+24V13*Euler_Totient{4M12} 25i<c,jp_ada_euler_totient>22
+27V13*Solve_Diophantine{8R9} 28i<c,jp_ada_solve_diophantine>22
+

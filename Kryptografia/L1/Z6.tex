@@ -1,0 +1,61 @@
+\documentclass{article}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage[polish,shorthands=off]{babel}
+\usepackage{amsmath,mathtools,amsfonts,stackengine}
+\usepackage{pgf-umlsd}
+\stackMath
+\usepackage{amssymb}
+\title{Zadanie 6 z listy 1}
+\author{Jakub Kowal}
+\date{}
+
+\begin{document}
+\maketitle
+\section*{Schemat}
+
+\begin{center}
+    
+
+\begin{sequencediagram}
+\newinst{D}{Dowodzący}
+\newinst{W}{Weryfikator}
+
+\mess{D}{$X = g^{x}$}{W}
+\mess{W}{$c$}{D}
+\mess{D}{$s = \lparen a + cx\rparen \lparen c + ax\rparen$}{W}
+\mess{D}{$W=g^{ax^{2}}$}{W}
+\mess{D}{$Z=g^{xa^{2}}$}{W}
+\begin{messcall}{W}{$\text{ACC jeśli } g^{s}=(A X^{c}W)^{c}Z$}{D}
+\end{messcall}
+\end{sequencediagram}
+\end{center}
+
+\section{}
+\begin{center}
+    $g^{s} = {(AX^{c}W)}^{c}Z$\\
+    $g^{(a + cx)(c + ax)}=(g^{a}g^{cx}g^{ax^{2}})^{c}g^{xa^{2}}$\\
+    $g^{ac + a^{2}x + c^{2}x + acx^{2}} = g^{ac}g^{c^{2}x}g^{acx^{2}}g^{xa^{2}}$\\
+    $g^{ac + a^{2}x + c^{2}x + acx^{2}} = g^{ac + a^{2}x + c^{2}x + acx^{2}}$
+\end{center}
+
+\section{}
+Nie wymusza znajmości sekretu a, co będzie udowodnione w nastepnym punkcie.
+\section{}
+Weryfikator akceptuje jeśli spełnione jest $g^{s}=(A X^{c}W)^{c}Z$. Możemy wyprowadzić:
+\begin{center}
+    $Z=\frac{g^{s}}{{(AX^{c}W)}^{c}}$
+\end{center}Dowodzący dosyła s, W, Z, więc wysyłając $s = 0$ i $W = 1$ otrzymujemy równanie:
+\begin{center}
+    $Z=\frac{1}{{(AX^{c})}^{c}}$
+\end{center}
+Znając x oraz A obliczamy Z, które spełni warunki akceptacji.
+
+\section{}
+W tym przypadku wysoka złożoność wzrorów jedynie zaciemnia obraz, bo jak udowodniłem łatwo da się obejść zabezpieczenie.
+
+\section{}
+Skuteczność kryptografii nie polega na tym, żeby równania były trudne do odczytania, tylko na tym, żeby atakujący nie miał żadnej swobody ruchu. Bezpieczne protokoły (takie jak klasyczny Schnorr) są proste i eleganckie – bezpieczeństwo bierze się z tego, że napastnik musi rozwiązać konkretny trudny problem. Dodawanie dużej ilości dodatkowych parametrów, może powodować więcej miejsc na luki w systemie.
+
+\end{document}
