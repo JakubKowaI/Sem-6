@@ -13,8 +13,8 @@ U jp_ada%s		jp_ada.ads		01e7dc39 EE NE OO PK
 W interfaces%s		interfac.ads		interfac.ali
 
 D interfac.ads		20260209135214 9111f9c1 interfaces%s
-D jp_ada.ads		20260323202910 90f625f8 jp_ada%s
-D jp_ada.adb		20260323202910 10007b94 jp_ada%b
+D jp_ada.ads		20260323211015 90f625f8 jp_ada%s
+D jp_ada.adb		20260326161802 10007b94 jp_ada%b
 D system.ads		20260209135214 14286b0f system%s
 G a e
 G c Z s b [gcd jp_ada 18 13 none]

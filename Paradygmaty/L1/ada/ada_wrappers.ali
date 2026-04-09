@@ -14,7 +14,7 @@ W jp_ada%s		jp_ada.adb		jp_ada.ali
 D ada_wrappers.ads	20260319143226 24491fd9 ada_wrappers%s
 D ada_wrappers.adb	20260323202910 720e123e ada_wrappers%b
 D interfac.ads		20260209135214 9111f9c1 interfaces%s
-D jp_ada.ads		20260323202910 90f625f8 jp_ada%s
+D jp_ada.ads		20260323211015 90f625f8 jp_ada%s
 D system.ads		20260209135214 14286b0f system%s
 G a e
 G c Z s b [wrap_c_gcd ada_wrappers 8 13 none]

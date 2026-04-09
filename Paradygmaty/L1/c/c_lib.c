@@ -86,31 +86,31 @@ diof_wyn diophantine(uint64_t a, uint64_t b, uint64_t c) {
         return out;
     }
 
-    int64_t x0 = 0;
-    int64_t y0 = 0;
-    int64_t d = NWD(a,b);
+    uint64_t x0 = 0;
+    uint64_t y0 = 0;
+    uint64_t d = NWD(a,b);
     //printf("D: %lld\n",d);
 
     if (d == 0 || c % d != 0) {
         return out;
     }
 
-    int64_t aprim = (int64_t)(a / (uint64_t)d);
-    int64_t bprim = (int64_t)(b_signed / (int64_t)d);
-    int64_t cprim = (int64_t)(c / (uint64_t)d);
+    uint64_t aprim = a / d;
+    uint64_t bprim = b_signed / d;
+    uint64_t cprim = c / d;
 
     d = euklides(aprim, bprim, &x0, &y0);
-    if (d < 0) {
-        d = -d;
-        x0 = -x0;
-        y0 = -y0;
-    }
+    // if (d < 0) {
+    //     d = -d;
+    //     x0 = -x0;
+    //     y0 = -y0;
+    // }
     //printf("x0: %ld, y0: %ld\n",x0,y0);
 
     out.bool_wyn = 1;
     out.x = x0 * cprim;
     out.y = y0 * cprim;
-    out.a = (int64_t)a;
+    out.a = a;
     out.b = b_signed;
     out.d = d;
     return out;

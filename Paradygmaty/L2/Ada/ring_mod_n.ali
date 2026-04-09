@@ -1,0 +1,131 @@
+V "GNAT Lib v15"
+P ZX
+
+RN
+RV NO_EXCEPTIONS
+RV NO_RECURSION
+
+U ring_mod_n%b		ring_mod_n.adb		cd92ea81 NE OO PK GE
+W ada%s			ada.ads			ada.ali
+W ada.integer_text_io%s	a-inteio.ads		a-inteio.ali
+Z ada.strings.text_buffers%s  a-sttebu.adb	a-sttebu.ali
+
+U ring_mod_n%s		ring_mod_n.ads		39d40aea BN EE NE OO PK GE
+W interfaces%s		interfac.ads		interfac.ali
+
+D ada.ads		20260209135214 76789da1 ada%s
+D a-except.ads		20260209135214 e7970cd9 ada.exceptions%s
+D a-inteio.ads		20260209135214 f64b89a4 ada.integer_text_io%s
+D a-ioexce.ads		20260209135214 40018c65 ada.io_exceptions%s
+D a-stream.ads		20260209135214 17477cbd ada.streams%s
+D a-string.ads		20260209135214 90ac6797 ada.strings%s
+D a-sttebu.ads		20260209135214 f1ad67a2 ada.strings.text_buffers%s
+D a-stuten.ads		20260209135214 c6ced0ae ada.strings.utf_encoding%s
+D a-tags.ads		20260209135214 fbca0ad5 ada.tags%s
+D a-textio.ads		20260209135214 34ef47de ada.text_io%s
+D a-tiinio.ads		20260209135214 76699c8f ada.text_io.integer_io%s
+D a-unccon.ads		20260209135214 0e9b276f ada.unchecked_conversion%s
+D interfac.ads		20260209135214 9111f9c1 interfaces%s
+D i-cstrea.ads		20260209135214 ffd01b9d interfaces.c_streams%s
+D ring_mod_n.ads	20260409145646 a8c5f32b ring_mod_n%s
+D ring_mod_n.adb	20260409145648 931c900e ring_mod_n%b
+D system.ads		20260209135214 14286b0f system%s
+D s-crtl.ads		20260209135214 beb39b9e system.crtl%s
+D s-exctab.ads		20260209135214 91bef6ef system.exception_table%s
+D s-ficobl.ads		20260209135214 dc5161d4 system.file_control_block%s
+D s-parame.ads		20260209135214 3597fc11 system.parameters%s
+D s-putima.ads		20260209135214 17291fe4 system.put_images%s
+D s-secsta.ads		20260209135214 578279f5 system.secondary_stack%s
+D s-soflin.ads		20260209135214 5d88fdea system.soft_links%s
+D s-stache.ads		20260209135214 0b81c1fe system.stack_checking%s
+D s-stalib.ads		20260209135214 1c9580f6 system.standard_library%s
+D s-stoele.ads		20260209135214 ccded4e8 system.storage_elements%s
+D s-traent.ads		20260209135214 c81cbf8c system.traceback_entries%s
+D s-unstyp.ads		20260209135214 fa2a7f59 system.unsigned_types%s
+D s-wchcon.ads		20260209135214 d9032363 system.wch_con%s
+G a e
+G c Z s b [ring_mod_n standard 5 9 none]
+X 1 ada.ads
+18K9*Ada 22e8 16|1r6 120r9 126r9
+X 3 a-inteio.ads
+18K13*Integer_Text_IO[11|46] 16|1w10 120r13 126r13
+X 11 a-tiinio.ads
+62U14*Get 16|126s29[3|18]
+85U14*Put 16|120s29[3|18]
+X 13 interfac.ads
+47K9*Interfaces 247e15 15|1w6
+X 15 ring_mod_n.ads
+4i5 N{positive} 16|40r32 51r23 51r27 51r34
+5k9*Ring_Mod_N 4z5 30E10 34l5 34e15 16|3b14 130l5 130t15
+7R10*Ring 9r26 10r27 11r27 12r26 13r26 15r26 15r39 16r26 16r39 17r26 17r39
+. 18r26 18r39 20r29 23r47 26r26 27r30 30c10 33e19 16|36r26 36r39 38r13 54r26
+. 54r39 55r13 61r26 61r39 62r13 68r26 68r39 69r13 75r26 75r39 80r26 85r27
+. 90r27 95r26 100r26 105r29 110r47 111r13 118r26 123r30
+9V15*"="{boolean} 9>19 9>22 16|80b15 83l10 83t12
+9r19 A{7R10} 16|80b19 82r16
+9r22 B{7R10} 16|80b22 82r24
+10V15*"<="{boolean} 10>20 10>23 16|85b15 88l10 88t13
+10r20 A{7R10} 16|85b20 87r16
+10r23 B{7R10} 16|85b23 87r25
+11V15*">="{boolean} 11>20 11>23 16|90b15 93l10 93t13
+11r20 A{7R10} 16|90b20 92r16
+11r23 B{7R10} 16|90b23 92r25
+12V15*"<"{boolean} 12>19 12>22 16|95b15 98l10 98t12
+12r19 A{7R10} 16|95b19 97r16
+12r22 B{7R10} 16|95b22 97r24
+13V15*">"{boolean} 13>19 13>22 16|100b15 103l10 103t12
+13r19 A{7R10} 16|100b19 102r16
+13r22 B{7R10} 16|100b22 102r24
+15V15*"+"{7R10} 15>19 15>22 16|54b15 59l10 59t12
+15r19 A{7R10} 16|54b19 57r25
+15r22 B{7R10} 16|54b22 57r33
+16V15*"-"{7R10} 16>19 16>22 16|61b15 66l10 66t12
+16r19 A{7R10} 16|61b19 64r25
+16r22 B{7R10} 16|61b22 64r33
+17V15*"*"{7R10} 17>19 17>22 16|68b15 73l10 73t12 77s18
+17r19 A{7R10} 16|68b19 71r25
+17r22 B{7R10} 16|68b22 71r33
+18V15*"/"{7R10} 18>19 18>22 16|75b15 78l10 78t12
+18r19 A{7R10} 16|75b19 77r16
+18r22 B{7R10} 16|75b22 77r28
+20V14*To_Integer{integer} 20>25 16|105b14 108l9 108t19
+20r25 A{7R10} 16|105b25 107r16
+23V14*From_Integer{7R10} 23>27 16|110b14 115l9 115t21
+23i27 X{integer} 16|110b27 113r25
+26U15*Put 26>19 16|118b15 121l9 121t12
+26r19 Item{7R10} 16|118b19 120r33
+27U15*Get 27<19 16|123b15 128l9 128t12
+27r19 Item{7R10} 16|123b19 127m9
+32i13 Val{integer} 16|40r27 45m11 57m11 57r27 57r35 64m11 64r27 64r35 71m11
+. 71r27 71r35 82r18 82r26 87r18 87r27 92r18 92r27 97r18 97r26 102r18 102r26
+. 107r18 113m11 120r38 127m14
+X 16 ring_mod_n.adb
+5V14 Modulo{integer} 5>21 45s18 49b14 52l9 52t15 57s18 64s18 71s18 113s18
+. 127s21
+5i21 X{integer} 49b21 51r17
+7V14 NWD{integer} 7b14 7>18 7>21 18l9 18t12
+7i18 A{integer} 8r25
+7i21 B{integer} 9r25
+8i9 AA{integer} 14r19 15m13 17r16
+9i9 BB{integer} 12r15 13r18 14m13 14r26
+10i9 T{integer} 13m13 15r19
+20V14 Euklides{integer} 20b14 20>23 20>26 20=39 20=42 29s18 34l9 34t17 40s16
+20i23 A{integer} 27r20 29r30 31r24
+20i26 B{integer} 24r12 29r27 29r36 31r28
+20i39 X{integer} 25m13 30m13
+20i42 Y{integer} 26m13 31m13
+21i9 X1{integer} 29m39 29r39 31r18
+21i13 Y1{integer} 29m43 29r43 30r18 31r33
+22i9 D{integer} 29m13 32r20
+36V14 Inverse{15|7R10} 36b14 36>22 47l9 47t16 77s20
+36r22 B{15|7R10} 40r25
+37i9 X{integer} 40m35 40r35 45r25
+37i12 Y{integer} 40m38 40r38
+37i15 GCD{integer} 40m9 41r12
+38r9 R{15|7R10} 45m9 46r16
+55r9 R{15|7R10} 57m9 58r16
+62r9 R{15|7R10} 64m9 65r16
+69r9 R{15|7R10} 71m9 72r16
+111r9 R{15|7R10} 113m9 114r16
+124i9 V{integer} 126m33 127r28
+

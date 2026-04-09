@@ -32,7 +32,7 @@ D a-unccon.ads		20260209135214 0e9b276f ada.unchecked_conversion%s
 D ada_wrappers.ads	20260319143226 24491fd9 ada_wrappers%s
 D interfac.ads		20260209135214 9111f9c1 interfaces%s
 D i-cstrea.ads		20260209135214 ffd01b9d interfaces.c_streams%s
-D jp_ada.ads		20260323202910 90f625f8 jp_ada%s
+D jp_ada.ads		20260323211015 90f625f8 jp_ada%s
 D system.ads		20260209135214 14286b0f system%s
 D s-conca2.ads		20260209135214 b5fb73f7 system.concat_2%s
 D s-conca5.ads		20260209135214 4099d1db system.concat_5%s
@@ -58,7 +58,7 @@ D s-vauspe.ads		20260209135214 89269ba5 system.value_u_spec%s
 D s-vs_lli.ads		20260209135214 b945cf7d system.vs_lli%s
 D s-vs_llu.ads		20260209135214 8f3536c5 system.vs_llu%s
 D s-wchcon.ads		20260209135214 d9032363 system.wch_con%s
-D test_ada.adb		20260323202910 38e45fea test_ada%b
+D test_ada.adb		20260326165251 38e45fea test_ada%b
 G a e
 G c Z b b [test_ada standard 6 11 none]
 G r c none [test_ada standard 6 11 none] [gcd jp_ada 18 13 none]

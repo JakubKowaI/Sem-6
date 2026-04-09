@@ -6,11 +6,11 @@
 
 typedef struct {
     uint8_t bool_wyn;
-    int64_t x;
-    int64_t y;
-    int64_t a;
-    int64_t b;
-    int64_t d;
+    uint64_t x;
+    uint64_t y;
+    uint64_t a;
+    uint64_t b;
+    uint64_t d;
 } diof_wyn;
 
 uint64_t NWD(uint64_t a, uint64_t b);

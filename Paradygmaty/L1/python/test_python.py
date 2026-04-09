@@ -8,11 +8,11 @@ from pathlib import Path
 class DioResult(Structure):
     _fields_ = [
         ("bool_wyn", c_uint8),
-        ("x", c_int64),
-        ("y", c_int64),
-        ("a", c_int64),
-        ("b", c_int64),
-        ("d", c_int64),
+        ("x", c_uint64),
+        ("y", c_uint64),
+        ("a", c_uint64),
+        ("b", c_uint64),
+        ("d", c_uint64),
     ]
 
 
@@ -80,19 +80,26 @@ def main() -> None:
 
     print(f"[C wrapper] gcd={lib_c.NWD(84, 30)}")
     print(f"[C wrapper] spd={lib_c.NWD_prime(91)}")
-    print(f"[C wrapper] phi={lib_c.euler_totient(36)}")
-    print_dio("[C wrapper] dio", lib_c.diophantine(7, 5, 9))
+    print(f"[C wrapper] phi={lib_c.euler_totient(123)}")
+    print_dio("[C wrapper] dio", lib_c.diophantine(28, 59, 4))
 
     print(f"[Ada wrapper] gcd={lib_ada.jp_ada_gcd(84, 30)}")
     print(f"[Ada wrapper] spd={lib_ada.jp_ada_smallest_prime_divisor(91)}")
-    print(f"[Ada wrapper] phi={lib_ada.jp_ada_euler_totient(36)}")
-    print_dio("[Ada wrapper] dio", lib_ada.jp_ada_solve_diophantine(7, 5, 9))
+    print(f"[Ada wrapper] phi={lib_ada.jp_ada_euler_totient(123)}")
+    print_dio("[Ada wrapper] dio", lib_ada.jp_ada_solve_diophantine(28, 59, 4))
 
     print(f"[Rust wrapper] gcd={lib_rust.jp_rust_gcd(84, 30)}")
     print(f"[Rust wrapper] spd={lib_rust.jp_rust_smallest_prime_divisor(91)}")
-    print(f"[Rust wrapper] phi={lib_rust.jp_rust_euler_totient(36)}")
-    print_dio("[Rust wrapper] dio", lib_rust.jp_rust_solve_diophantine(7, 5, 9))
+    print(f"[Rust wrapper] phi={lib_rust.jp_rust_euler_totient(123)}")
+    print_dio("[Rust wrapper] dio", lib_rust.jp_rust_solve_diophantine(28, 59, 4))
 
+    print_dio("[C wrapper] dio", lib_c.diophantine(-28, 59, 4))
+    #print_dio("[Ada wrapper] dio", lib_ada.jp_ada_solve_diophantine(-28, 59, 4))
+    print_dio("[Rust wrapper] dio", lib_rust.jp_rust_solve_diophantine(-28, 59, 4))
+
+    print_dio("[C wrapper] dio", lib_c.diophantine(0, 2, 4))
+    print_dio("[Ada wrapper] dio", lib_ada.jp_ada_solve_diophantine(0, 2, 4))
+    print_dio("[Rust wrapper] dio", lib_rust.jp_rust_solve_diophantine(0, 2, 4))
 
 if __name__ == "__main__":
     main()
