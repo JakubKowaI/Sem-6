@@ -1,0 +1,115 @@
+V "GNAT Lib v15"
+P ZX
+
+RN
+RV NO_EXCEPTIONS
+RV NO_FLOATING_POINT
+RV NO_LONG_LONG_INTEGERS
+RV NO_DEFAULT_INITIALIZATION
+
+U users%b		users.adb		9f5bf9d2 NE OO PK GE
+W ada%s			ada.ads			ada.ali
+W ada.numerics%s	a-numeri.ads		a-numeri.ali
+W ada.numerics.float_random%s  a-nuflra.adb	a-nuflra.ali
+Z ada.strings.text_buffers%s  a-sttebu.adb	a-sttebu.ali
+
+U users%s		users.ads		8a925027 BN EE NE OO PK GE
+W dh_setup%s		dh_setup.adb		dh_setup.ali
+W ring_mod_n%s		ring_mod_n.adb		ring_mod_n.ali
+
+D ada.ads		20260209135214 76789da1 ada%s
+D a-except.ads		20260209135214 e7970cd9 ada.exceptions%s
+D a-ioexce.ads		20260209135214 40018c65 ada.io_exceptions%s
+D a-numeri.ads		20260209135214 84bea7a3 ada.numerics%s
+D a-nuflra.ads		20260209135214 4056ab7a ada.numerics.float_random%s
+D a-stream.ads		20260209135214 17477cbd ada.streams%s
+D a-string.ads		20260209135214 90ac6797 ada.strings%s
+D a-sttebu.ads		20260209135214 f1ad67a2 ada.strings.text_buffers%s
+D a-stuten.ads		20260209135214 c6ced0ae ada.strings.utf_encoding%s
+D a-tags.ads		20260209135214 fbca0ad5 ada.tags%s
+D a-textio.ads		20260209135214 34ef47de ada.text_io%s
+D a-unccon.ads		20260209135214 0e9b276f ada.unchecked_conversion%s
+D dh_setup.ads		20260418124946 afd561c0 dh_setup%s
+D interfac.ads		20260209135214 9111f9c1 interfaces%s
+D i-cstrea.ads		20260209135214 ffd01b9d interfaces.c_streams%s
+D ring_mod_n.ads	20260418124946 8d89bbd3 ring_mod_n%s
+D system.ads		20260209135214 14286b0f system%s
+D s-crtl.ads		20260209135214 beb39b9e system.crtl%s
+D s-exctab.ads		20260209135214 91bef6ef system.exception_table%s
+D s-ficobl.ads		20260209135214 dc5161d4 system.file_control_block%s
+D s-parame.ads		20260209135214 3597fc11 system.parameters%s
+D s-putima.ads		20260209135214 17291fe4 system.put_images%s
+D s-rannum.ads		20260209135214 95815eca system.random_numbers%s
+D s-secsta.ads		20260209135214 578279f5 system.secondary_stack%s
+D s-soflin.ads		20260209135214 5d88fdea system.soft_links%s
+D s-stache.ads		20260209135214 0b81c1fe system.stack_checking%s
+D s-stalib.ads		20260209135214 1c9580f6 system.standard_library%s
+D s-stoele.ads		20260209135214 ccded4e8 system.storage_elements%s
+D s-traent.ads		20260209135214 c81cbf8c system.traceback_entries%s
+D s-unstyp.ads		20260209135214 fa2a7f59 system.unsigned_types%s
+D s-wchcon.ads		20260209135214 d9032363 system.wch_con%s
+D users.ads		20260418125008 a8ce8a34 users%s
+D users.adb		20260418125200 77c3d89c users%b
+G a e
+G c Z s b [users standard 7 9 none]
+X 1 ada.ads
+18K9*Ada 22e8 33|1r6 7r27
+X 4 a-numeri.ads
+20K13*Numerics 36e17 33|1r10 7r31
+X 5 a-nuflra.ads
+41K22*Float_Random 74e30 33|1w19 7r40
+47R9*Generator<23|65R9> 33|8r18
+49F12*Uniformly_Distributed{float}
+51V13*Random{49F12}<23|73p13> 33|14s28
+53U14*Reset<23|103p14> 33|13s11
+X 13 dh_setup.ads
+5k9*DH_Setup 19e13 32|2w6 6r28
+7R9 Instance 32|11r45[6] 23r40[6] 33|22r45[32|6]
+10V13 Get_Modulo{long_long_integer} 33|29s16[32|6]
+11V13 Get_Generator{16|7R9[32|5]} 33|44s45[32|6]
+12V13 Power{16|7R9[32|5]} 33|44s18[32|6] 49s30[32|6]
+X 16 ring_mod_n.ads
+5k9*Ring_Mod_N 30e15 32|1w6 5r30
+7R9 Ring 32|12r59[5] 13r57[5] 14r49[5] 14r68[5] 15r49[5] 15r68[5] 16r59[5]
+. 21r26[5] 33|4r19[32|5] 42r59[32|5] 47r57[32|5] 53r49[32|5] 53r68[32|5]
+. 61r49[32|5] 61r68[32|5] 69r59[32|5]
+17V14 "*"{7R9[32|5]} 33|58s16[32|5]
+18V14 "/"{7R9[32|5]} 33|66s16[32|5]
+21V13 From_Integer{7R9[32|5]} 33|36s30[32|5]
+X 32 users.ads
+5K17 Rings[16|5] 6r38 12r53 13r51 14r43 14r62 15r43 15r62 16r53 21r20 33|4r13
+. 36r24 42r53 47r51 53r43 53r62 61r43 61r62 69r53
+6K17 Dhs[13|5] 11r41 23r36 33|22r41 29r12 44r14 44r41 49r26
+7k9*Users 5z17 6z17 19E9 25l5 25e10 33|3b14 77l5 77t10
+9R9*Instance 11r62 12r36 13r37 14r29 15r29 16r36 19c9 24e14 33|22r62 42r36
+. 47r37 53r29 61r29 69r36
+11V13*Create{9R9} 11^21 33|22b13 40l8 40t14
+11p21 D(13|7R9[6]) 33|22b21 25r10 29r28 38r24
+12V13*Get_Public_Key{16|7R9[5]} 12>29 33|42b13 45l8 45t22
+12r29 Self{9R9} 33|42b29 44r25 44r60 44r77
+13U14*Set_Key 13=23 13>47 33|47b14 51l8 51t15
+13r23 Self{9R9} 33|47b23 49m7 49r37 49r56 50m7
+13r47 A{16|7R9[5]} 33|47b47 49r53
+14V13*Encrypt{16|7R9[5]} 14>22 14>39 33|53b13 59l8 59t15
+14r22 Self{9R9} 33|53b22 55r14 58r18
+14r39 M{16|7R9[5]} 33|53b39 58r14
+15V13*Decrypt{16|7R9[5]} 15>22 15>39 33|61b13 67l8 67t15
+15r22 Self{9R9} 33|61b22 63r14 66r18
+15r39 C{16|7R9[5]} 33|61b39 66r14
+16V13*Get_Shared_Key{16|7R9[5]} 16>29 33|69b13 75l8 75t22
+16r29 Self{9R9} 33|69b29 71r14 74r14
+20i7 My_Secret{long_long_integer} 33|35m10 44r82 49r61
+21r7 Shared_Key{16|7R9[5]} 33|36m10 49m12 58r23 66r23 74r19
+22b7 Has_Key{boolean} 33|37m10 50m12 55r19 63r19 71r19
+23p7 Setup(13|7R9[6]) 33|38m10 44r30 44r65 49r42
+X 33 users.adb
+6V13 Random_In_Range{long_long_integer} 6b13 6>30 6>35 20l8 20t23 35s24
+6i30 Low{long_long_integer} 9r51 15r14
+6i35 High{long_long_integer} 9r44 16r16 17r17
+7K15 RNG=7:40 8r14 13r7 14r24
+8r7 Gen{5|47R9} 13r18 14r36
+9i7 Span{long_long_integer} 15r55
+10f7 R{long_float} 14m7 15r39
+11i7 Raw{long_long_integer} 15m7 16r10 19r14
+23i7 P{long_long_integer} 29m7 30r10 35r44
+

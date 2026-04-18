@@ -1,0 +1,128 @@
+V "GNAT Lib v15"
+P ZX
+
+RN
+RV NO_EXCEPTIONS
+RV NO_IO
+RV NO_LONG_LONG_INTEGERS
+
+U ring_mod_n%b		ring_mod_n.adb		02096b69 NE OO PK GE
+W ada%s			ada.ads			ada.ali
+W ada.long_long_integer_text_io%s  a-llitio.ads	a-llitio.ali
+Z ada.strings.text_buffers%s  a-sttebu.adb	a-sttebu.ali
+
+U ring_mod_n%s		ring_mod_n.ads		b966fc0d BN EE NE OO PK GE
+W ada%s			ada.ads			ada.ali
+W ada.text_io%s		a-textio.adb		a-textio.ali
+
+D ada.ads		20260209135214 76789da1 ada%s
+D a-except.ads		20260209135214 e7970cd9 ada.exceptions%s
+D a-ioexce.ads		20260209135214 40018c65 ada.io_exceptions%s
+D a-llitio.ads		20260209135214 9aecf52b ada.long_long_integer_text_io%s
+D a-stream.ads		20260209135214 17477cbd ada.streams%s
+D a-string.ads		20260209135214 90ac6797 ada.strings%s
+D a-sttebu.ads		20260209135214 f1ad67a2 ada.strings.text_buffers%s
+D a-stuten.ads		20260209135214 c6ced0ae ada.strings.utf_encoding%s
+D a-tags.ads		20260209135214 fbca0ad5 ada.tags%s
+D a-textio.ads		20260209135214 34ef47de ada.text_io%s
+D a-tiinio.ads		20260209135214 76699c8f ada.text_io.integer_io%s
+D a-unccon.ads		20260209135214 0e9b276f ada.unchecked_conversion%s
+D interfac.ads		20260209135214 9111f9c1 interfaces%s
+D i-cstrea.ads		20260209135214 ffd01b9d interfaces.c_streams%s
+D ring_mod_n.ads	20260418124946 8d89bbd3 ring_mod_n%s
+D ring_mod_n.adb	20260418124946 156c2591 ring_mod_n%b
+D system.ads		20260209135214 14286b0f system%s
+D s-crtl.ads		20260209135214 beb39b9e system.crtl%s
+D s-exctab.ads		20260209135214 91bef6ef system.exception_table%s
+D s-ficobl.ads		20260209135214 dc5161d4 system.file_control_block%s
+D s-parame.ads		20260209135214 3597fc11 system.parameters%s
+D s-putima.ads		20260209135214 17291fe4 system.put_images%s
+D s-secsta.ads		20260209135214 578279f5 system.secondary_stack%s
+D s-soflin.ads		20260209135214 5d88fdea system.soft_links%s
+D s-stache.ads		20260209135214 0b81c1fe system.stack_checking%s
+D s-stalib.ads		20260209135214 1c9580f6 system.standard_library%s
+D s-stoele.ads		20260209135214 ccded4e8 system.storage_elements%s
+D s-traent.ads		20260209135214 c81cbf8c system.traceback_entries%s
+D s-unstyp.ads		20260209135214 fa2a7f59 system.unsigned_types%s
+D s-wchcon.ads		20260209135214 d9032363 system.wch_con%s
+G a e
+G c Z s b [ring_mod_n standard 5 9 none]
+X 1 ada.ads
+18K9*Ada 22e8 15|1r6 16|1r6 123r7
+X 4 a-llitio.ads
+18K13*Long_Long_Integer_Text_IO[11|46] 16|1w10 123r11
+X 10 a-textio.ads
+58K13*Text_IO 785e16 15|1w10
+89I12*Field{integer}
+X 11 a-tiinio.ads
+85U14*Put 16|123s37[4|18]
+87i7 Width{10|89I12} 16|123r52[4|18]
+X 15 ring_mod_n.ads
+4i4 N{positive} 16|6r64 27r55 33r59 118r33
+5k9*Ring_Mod_N 4z4 27E9 30l5 30e15 16|3b14 126l5 126t15
+7R9*Ring 9r25 10r26 11r26 12r25 13r25 15r25 15r38 16r25 16r38 17r25 17r38
+. 18r25 18r38 20r29 21r57 24r26 27c9 29e14 16|24r26 24r39 31r15 53r25 53r38
+. 54r11 60r25 60r38 61r11 67r25 67r38 68r11 74r25 74r38 79r25 84r26 89r26
+. 94r25 99r25 104r29 109r57 110r11 121r26
+9V14*"="{boolean} 9>18 9>21 16|79b14 82l9 82t11
+9r18 A{7R9} 16|79b18 81r14
+9r21 B{7R9} 16|79b21 81r22
+10V14*"<="{boolean} 10>19 10>22 16|84b14 87l9 87t12
+10r19 A{7R9} 16|84b19 86r14
+10r22 B{7R9} 16|84b22 86r23
+11V14*">="{boolean} 11>19 11>22 16|89b14 92l9 92t12
+11r19 A{7R9} 16|89b19 91r14
+11r22 B{7R9} 16|89b22 91r23
+12V14*"<"{boolean} 12>18 12>21 16|94b14 97l9 97t11
+12r18 A{7R9} 16|94b18 96r14
+12r21 B{7R9} 16|94b21 96r22
+13V14*">"{boolean} 13>18 13>21 16|99b14 102l9 102t11
+13r18 A{7R9} 16|99b18 101r14
+13r21 B{7R9} 16|99b21 101r22
+15V14*"+"{7R9} 15>18 15>21 16|53b14 58l9 58t11
+15r18 A{7R9} 16|53b18 56r27
+15r21 B{7R9} 16|53b21 56r35
+16V14*"-"{7R9} 16>18 16>21 16|60b14 65l9 65t11
+16r18 A{7R9} 16|60b18 63r27
+16r21 B{7R9} 16|60b21 63r35
+17V14*"*"{7R9} 17>18 17>21 16|67b14 72l9 72t11 76s16
+17r18 A{7R9} 16|67b18 70r27
+17r21 B{7R9} 16|67b21 70r35
+18V14*"/"{7R9} 18>18 18>21 16|74b14 77l9 77t11
+18r18 A{7R9} 16|74b18 76r14
+18r21 B{7R9} 16|74b21 76r27
+20V13*To_Integer{long_long_integer} 20>25 16|104b13 107l8 107t18
+20r25 A{7R9} 16|104b25 106r14
+21V13*From_Integer{7R9} 21>27 16|109b13 114l8 114t20
+21i27 X{long_long_integer} 16|109b27 112r27
+22V13*Modulus{long_long_integer} 16|116b13 119l8 119t15
+24U14*Put 24>19 16|121b14 124l8 124t11
+24r19 Item{7R9} 16|121b19 123r42
+28i7 Val{long_long_integer} 16|28r49 49m13 56m9 56r29 56r37 63m9 63r29 63r37
+. 70m9 70r29 70r37 81r16 81r24 86r16 86r25 91r16 91r25 96r16 96r24 101r16
+. 101r24 106r16 112m9 123r47
+X 16 ring_mod_n.adb
+5V13 Normalize{long_long_integer} 5b13 5>24 9l8 9t17 28s36 49s20 56s16 63s16
+. 70s16 112s16
+5i24 X{long_long_integer} 8r16
+6i7 Mod_N{long_long_integer} 8r22 8r31 8r42
+11V13 GCD{long_long_integer} 11b13 11>18 11>21 22l8 22t11 33s28
+11i18 A{long_long_integer} 12r33
+11i21 B{long_long_integer} 13r33
+12i7 AA{long_long_integer} 18r16 19m10 21r14
+13i7 BB{long_long_integer} 16r13 17r16 18m10 18r23
+14i7 T{long_long_integer} 17m10 19r16
+24V13 Inverse{15|7R9} 24b13 24>22 51l8 51t15 76s18
+24r22 B{15|7R9} 28r47
+25i7 T{long_long_integer} 41r19 42m10 49r31
+26i7 New_T{long_long_integer} 40r19 41m10 41r27
+27i7 R{long_long_integer} 38r15 45r19 46m10
+28i7 New_R{long_long_integer} 33r10 33r33 37r13 38r19 44r19 45m10 45r27
+29i7 Q{long_long_integer} 38m10 41r23 45r23
+30i7 Tmp{long_long_integer} 40m10 42r19 44m10 46r19
+31r7 Out_V{15|7R9} 49m7 50r14
+54r7 R{15|7R9} 56m7 57r14
+61r7 R{15|7R9} 63m7 64r14
+68r7 R{15|7R9} 70m7 71r14
+110r7 R{15|7R9} 112m7 113r14
+

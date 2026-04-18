@@ -1,5 +1,9 @@
 #pragma once
 
+#include <ostream>
+#include <stdexcept>
+#include <iostream>
+
 template <int n>
 class Ring
 {
@@ -54,7 +58,7 @@ public:
     // }
     Ring(int x) : val(((x % n) + n) % n) {}
 
-    //operator int() const { return val; }
+    operator int() const { return val; }
 
     bool operator ==(const Ring& b) const {
         try

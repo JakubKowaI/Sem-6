@@ -1,0 +1,127 @@
+V "GNAT Lib v15"
+M P W=b
+P ZX
+
+RN
+RV NO_EXCEPTIONS
+RV NO_FLOATING_POINT
+RV NO_IO
+RV NO_IMPLICIT_CONDITIONALS
+RV NO_STANDARD_STORAGE_POOLS
+RV NO_DEFAULT_INITIALIZATION
+
+U test%b		test.adb		6bf55cdd NE OO SU
+W ada%s			ada.ads			ada.ali
+Z ada.exceptions%s	a-except.adb		a-except.ali
+Z ada.long_long_integer_text_io%s  a-llitio.ads	a-llitio.ali
+W ada.numerics%s	a-numeri.ads		a-numeri.ali
+Z ada.numerics.float_random%s  a-nuflra.adb	a-nuflra.ali
+Z ada.strings.text_buffers%s  a-sttebu.adb	a-sttebu.ali
+W ada.text_io%s		a-textio.adb		a-textio.ali
+W dh_setup%s		dh_setup.adb		dh_setup.ali
+W ring_mod_n%s		ring_mod_n.adb		ring_mod_n.ali
+W rsa%s			rsa.adb			rsa.ali
+W users%s		users.adb		users.ali
+
+D ada.ads		20260209135214 76789da1 ada%s
+D a-except.ads		20260209135214 e7970cd9 ada.exceptions%s
+D a-ioexce.ads		20260209135214 40018c65 ada.io_exceptions%s
+D a-llitio.ads		20260209135214 9aecf52b ada.long_long_integer_text_io%s
+D a-numeri.ads		20260209135214 84bea7a3 ada.numerics%s
+D a-nuflra.ads		20260209135214 4056ab7a ada.numerics.float_random%s
+D a-stream.ads		20260209135214 17477cbd ada.streams%s
+D a-string.ads		20260209135214 90ac6797 ada.strings%s
+D a-sttebu.ads		20260209135214 f1ad67a2 ada.strings.text_buffers%s
+D a-stuten.ads		20260209135214 c6ced0ae ada.strings.utf_encoding%s
+D a-tags.ads		20260209135214 fbca0ad5 ada.tags%s
+D a-textio.ads		20260209135214 34ef47de ada.text_io%s
+D a-tiinio.ads		20260209135214 76699c8f ada.text_io.integer_io%s
+D a-unccon.ads		20260209135214 0e9b276f ada.unchecked_conversion%s
+D dh_setup.ads		20260418124946 afd561c0 dh_setup%s
+D dh_setup.adb		20260418125114 822a9b93 dh_setup%b
+D interfac.ads		20260209135214 9111f9c1 interfaces%s
+D i-cstrea.ads		20260209135214 ffd01b9d interfaces.c_streams%s
+D ring_mod_n.ads	20260418124946 8d89bbd3 ring_mod_n%s
+D ring_mod_n.adb	20260418124946 156c2591 ring_mod_n%b
+D rsa.ads		20260418125031 55b3ff1c rsa%s
+D rsa.adb		20260418125123 95086046 rsa%b
+D system.ads		20260209135214 14286b0f system%s
+D s-crtl.ads		20260209135214 beb39b9e system.crtl%s
+D s-exctab.ads		20260209135214 91bef6ef system.exception_table%s
+D s-ficobl.ads		20260209135214 dc5161d4 system.file_control_block%s
+D s-parame.ads		20260209135214 3597fc11 system.parameters%s
+D s-putima.ads		20260209135214 17291fe4 system.put_images%s
+D s-rannum.ads		20260209135214 95815eca system.random_numbers%s
+D s-secsta.ads		20260209135214 578279f5 system.secondary_stack%s
+D s-soflin.ads		20260209135214 5d88fdea system.soft_links%s
+D s-stache.ads		20260209135214 0b81c1fe system.stack_checking%s
+D s-stalib.ads		20260209135214 1c9580f6 system.standard_library%s
+D s-stoele.ads		20260209135214 ccded4e8 system.storage_elements%s
+D s-traent.ads		20260209135214 c81cbf8c system.traceback_entries%s
+D s-unstyp.ads		20260209135214 fa2a7f59 system.unsigned_types%s
+D s-wchcon.ads		20260209135214 d9032363 system.wch_con%s
+D test.adb		20260418125146 803bb438 test%b
+D users.ads		20260418125008 a8ce8a34 users%s
+D users.adb		20260418125200 77c3d89c users%b
+G a e
+G c Z b b [test standard 8 11 none]
+G r i none [test standard 8 11 none] [ring_mod_n standard 5 9 none]
+G r i none [test standard 8 11 none] [rsa standard 5 9 none]
+G r i none [test standard 8 11 none] [dh_setup standard 5 9 none]
+G r i none [test standard 8 11 none] [users standard 7 9 none]
+X 1 ada.ads
+18K9*Ada 22e8 38|1r6 1r23
+X 12 a-textio.ads
+58K13*Text_IO 785e16 38|1w10 1r27
+284U14*New_Line 38|37s4 56s4
+515U14*Put 38|48s4 50s4 52s4 54s4
+X 15 dh_setup.ads
+5k9*DH_Setup 19e13 38|4w6 14r27
+7R9 Instance 38|23r29[14]
+9V13 Create{7R9[38|14]} 38|23s49[14]
+X 19 ring_mod_n.ads
+5k9*Ring_Mod_N 30e15 38|3w6 9r28 10r27
+7R9 Ring 38|11r21[10] 19r25[9] 20r25[9] 21r25[9] 27r20[10] 28r20[10] 30r17[10]
+. 31r17[10] 32r17[10] 33r17[10] 34r17[10]
+9V14 "="{boolean} 38|58s15[10] 58s32[10]
+21V13 From_Integer{7R9[38|9]} 38|19s42[9] 32s33[10]
+24U14 Put 38|36s13[9] 49s12[10] 51s12[10] 53s12[10] 55s12[10]
+X 21 rsa.ads
+5k9*RSA 21e8 38|6w6 13r28
+7R9 Instance 38|17r23[13]
+9V13 Create{7R9[38|13]} 38|17s44[13]
+12V13 Encrypt{19|7R9[38|9]} 38|20s42[13]
+13V13 Decrypt{19|7R9[38|9]} 38|21s42[13]
+X 38 test.adb
+8U11*Test 8b11 61l5 61t9
+9K12 Ring_RSA[19|5] 13r33 19r16 19r33 20r16 21r16 36r4
+10K12 Ring_DH[19|5] 11r13 14r37 15r36 27r12 28r12 30r9 31r9 32r9 32r25 33r9
+. 34r9 49r4 51r4 53r4 55r4
+13K12 RSA_Impl[21|5] 17r14 17r35 20r33 21r33
+14K12 DH_Impl[15|5] 15r45 23r21 23r41
+15K12 User_Impl[39|7] 24r13 24r35 25r13 25r35 27r28 28r28 39r4 40r4 42r10
+. 43r10 45r9 46r9
+17r4 Rsa_Obj{21|7R9[13]} 20r51 21r51
+19r4 M{19|7R9[9]} 20r60
+20r4 S{19|7R9[9]} 21r60
+21r4 Decrypted{19|7R9[9]} 36r18
+23r4 Dh_Obj{15|7R9[14]} 24r53 25r53
+24r4 Alice{39|9R9[15]} 27r54 39m23 39r23 42r36 45r28
+25r4 Bob{39|9R9[15]} 28r54 40m23 40r23 43r36 46r28
+27r4 A_Pub{19|7R9[10]} 40r28
+28r4 B_Pub{19|7R9[10]} 39r30
+30r4 Ka{19|7R9[10]} 42m4 49r17 58r12
+31r4 Kb{19|7R9[10]} 43m4 51r17 58r17
+32r4 Mm{19|7R9[10]} 45r35 53r17 58r29
+33r4 C{19|7R9[10]} 45m4 46r33
+34r4 D{19|7R9[10]} 46m4 55r17 58r34
+X 39 users.ads
+7k9*Users 38|5w6 15r29 39|25e10
+9R9 Instance 38|24r23[15] 25r23[15]
+11V13 Create{9R9[38|15]} 38|24s45[15] 25s45[15]
+12V13 Get_Public_Key{19|7R9[38|10]} 38|27s38[15] 28s38[15]
+13U14 Set_Key 38|39s14[15] 40s14[15]
+14V13 Encrypt{19|7R9[38|10]} 38|45s19[15]
+15V13 Decrypt{19|7R9[38|10]} 38|46s19[15]
+16V13 Get_Shared_Key{19|7R9[38|10]} 38|42s20[15] 43s20[15]
+

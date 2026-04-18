@@ -19,10 +19,16 @@ long int intPeriod = 500000;
 volatile int cntL=0,cntR=0;
 
 Wheels w;
-volatile char cmd;
+// volatile char cmd;
+
+QMC5883LCompass compass;
+
+bool isLCDConnected() {
+  Wire.beginTransmission(LCDAddress); // or your LCD address
+  return (Wire.endTransmission() == 0);
+}
 
 void setup() {
-  // put your setup code here, to run once:
   w.attach(2,4,5,7,8,6);
 
   lcd.init();
@@ -30,7 +36,12 @@ void setup() {
 
   pinMode(BEEPER, OUTPUT);
   Timer1.initialize(intPeriod);
-  //TimerUpdate();
+  Timer1.detachInterrupt();
+  Timer1.attachInterrupt(TimerISR);
+  if(isLCDConnected()){
+    w.lcd=&lcd;
+    TimerUpdate();
+  }
 
   pinMode(INTINPUT0, INPUT);
   pinMode(INTINPUT1, INPUT);
@@ -40,14 +51,32 @@ void setup() {
 
   
   Serial.begin(9600);
-  // Serial.println("Forward: WAD");
-  // Serial.println("Back: ZXC");
-  // Serial.println("Stop: S");
+  compass.setADDR(0xD);
+  compass.setCalibrationOffsets(593.00, -732.00, 1215.00);
+  compass.setCalibrationScales(1.00, 1.09, 0.92);
+  compass.init();
 
   sei();
 }
 
 void loop() {
+
+  // byte error, address;
+  // int count = 0;
+
+  // for(address = 1; address < 127; address++) {
+  //   Wire.beginTransmission(address);
+  //   error = Wire.endTransmission();
+
+  //   if (error == 0) {
+  //     Serial.print("Znaleziono I2C: 0x");
+  //     Serial.println(address, HEX);
+  //     count++;
+  //   }
+  // }
+
+  // if (count == 0)
+  //   Serial.println("Nic nie znaleziono");
   // while(Serial.available())
   // {
   //   cmd = Serial.read();
@@ -75,11 +104,11 @@ void loop() {
   // }
   while(true){
     Serial.println("Going forward");
-    w.goPreciseForward(100, &lcd);
-    delay(300);
-    Serial.println("Going backward");
-    w.goPreciseBack(10, &lcd);
-    delay(300);
+    w.goPreciseForward(1000, &lcd, &compass);
+    // delay(300);
+    // Serial.println("Going backward");
+    // w.goPreciseBack(10, &lcd, &compass);
+    // delay(300);
   }
   // while(true){
   //   //w.testCM();
@@ -108,15 +137,22 @@ void loop() {
   // }
 }
 
+void printWrapper(){
+  w.printSpeed();
+}
+
 // aktualizuje Timer1 aktualną wartością intPeriod
 void TimerUpdate() {
   Timer1.detachInterrupt();
-  Timer1.attachInterrupt(doBeep);
+  Timer1.attachInterrupt(printWrapper);
 }
 
-// zmienia wartość pinu BEEPER
-void doBeep() {
-  digitalWrite(BEEPER, digitalRead(BEEPER) ^ 1);
+void TimerISR(){
+  static uint8_t counter = 0;
+  counter++;
+
+  if (counter % 10 == 0 && w.lcdTimer) w.printSpeed();
+  if (counter % w.beepSpeed == 0 && w.beepTimer) w.doBeep();
 }
 
 ISR(PCINT1_vect){

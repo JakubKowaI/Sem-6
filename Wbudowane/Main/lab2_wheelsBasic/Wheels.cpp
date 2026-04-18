@@ -6,6 +6,8 @@ int jedencm=7;
 int iloscSzczelinek=20;
 double obwod=20.8;
 
+float Kp = 1.5;
+
 void Wheels::attachRight(int pF, int pB, int pS)
 {
     pinMode(pF, OUTPUT);
@@ -147,6 +149,11 @@ void printSp(int speed, LiquidCrystal_I2C *lcd){
     printSpR(speed,lcd);
 }
 
+void Wheels::printSpeed(){
+    printSpL(this->speedLeft,this->lcd);
+    printSpR(this->speedRight,this->lcd);
+}
+
 void Wheels::goForwardWithInfo(int cm, LiquidCrystal_I2C *lcd=nullptr){
     int speed=160;
     this->setSpeed(speed);
@@ -215,7 +222,7 @@ void Wheels::getCounters(int &left, int &right) {
     interrupts();
 }
 
-void Wheels::goPreciseForward(int cm, LiquidCrystal_I2C *lcd=nullptr){
+void Wheels::goPreciseForward(int cm, LiquidCrystal_I2C *lcd=nullptr, QMC5883LCompass *compass=nullptr){
     int speed=160;
     int left,right,ogLeft,ogRight;
     getCounters(ogLeft,ogRight);
@@ -223,6 +230,14 @@ void Wheels::goPreciseForward(int cm, LiquidCrystal_I2C *lcd=nullptr){
     right=ogRight+1;
 
     int dist=cm*(obwod/iloscSzczelinek);
+
+    int startingAzimuth;
+    if(compass){
+        compass->read();
+        startingAzimuth = compass->getAzimuth();
+        // startingAzimuth = abs(startingAzimuth)*3
+    }
+    
 
     this->setSpeed(speed);
     
@@ -237,30 +252,54 @@ void Wheels::goPreciseForward(int cm, LiquidCrystal_I2C *lcd=nullptr){
 
     int l = (cm == 0) ? 1 : log10(abs(cm)) + 1;
     String spaces = "";
-    for(int i=0;i<l;++i){
+    for(int i=0;i<5;++i){
         spaces=spaces + ' ';
     }
     int lastVal = -1;
     while((left-ogLeft) < dist && (right-ogRight) < dist){
         int currentVal = (left-ogLeft != 0) ? (dist - (left-ogLeft)) : dist;
+        int a;
+        if(compass){
+            compass->read();
+            int currentAzimuth = compass->getAzimuth();
+            a=currentAzimuth;
+            int error = startingAzimuth - currentAzimuth;
+            
 
-        Serial.print(left);
-        Serial.print(" ");
-        Serial.println(right);
+            if (error > 180) error -= 360;
+            if (error < -180) error += 360;
+
+            // Serial.println(error);
+
+            int correction = Kp * error;
+
+            this->speedLeft  = speed - correction;
+            this->speedRight = speed + correction;
+            
+            this->setSpeedRight(this->speedRight);
+            this->setSpeedLeft(this->speedLeft);
+        }
+
+        // Serial.print(left);
+        // Serial.print(" ");
+        // Serial.println(right);
         
         if(lcd && currentVal != lastVal){
             lcd->setCursor(0, 0);
             lcd->print(spaces);  
             lcd->setCursor(0, 0);
-            lcd->print(currentVal); 
+            lcd->print(a); 
             lastVal = currentVal;
+            printSpL(this->speedLeft,lcd);
+            printSpR(this->speedRight,lcd);
         }   
         getCounters(left,right);
     }
+
     this->stop();
 }
 
-void Wheels::goPreciseBack(int cm, LiquidCrystal_I2C *lcd=nullptr){
+void Wheels::goPreciseBack(int cm, LiquidCrystal_I2C *lcd=nullptr, QMC5883LCompass *compass=nullptr){
     int speed=160;
     int left,right,ogLeft,ogRight;
     getCounters(ogLeft,ogRight);
@@ -268,6 +307,13 @@ void Wheels::goPreciseBack(int cm, LiquidCrystal_I2C *lcd=nullptr){
     right=ogRight+1;
 
     int dist=cm*(obwod/iloscSzczelinek);
+
+    int startingAzimuth;
+    if(compass){
+        compass->read();
+        startingAzimuth = compass->getAzimuth();
+    }
+    
 
     this->setSpeed(speed);
     
@@ -279,8 +325,12 @@ void Wheels::goPreciseBack(int cm, LiquidCrystal_I2C *lcd=nullptr){
     }
 
     this->back();
-    Timer1.detachInterrupt();
-    Timer1.attachInterrupt([](){  digitalWrite(BEEPER, digitalRead(BEEPER) ^ 1);},map(255-speed,0,255,100000,1000000));
+    //Timer1.detachInterrupt();
+    //Timer1.attachInterrupt([](){  this->printSpeed(); digitalWrite(BEEPER, digitalRead(BEEPER) ^ 1);},map(255-speed,0,255,100000,1000000));
+    this->beepTimer=1;
+    this->beepSpeed=map(255 - speed, 0, 255, 1000, 10000);
+    // Timer1.initialize(map(255 - speed, 0, 255, 100000, 1000000));
+    // Timer1.attachInterrupt(beepISR);
 
     int l = (cm == 0) ? 1 : log10(abs(cm)) + 1;
     String spaces = "";
@@ -290,7 +340,29 @@ void Wheels::goPreciseBack(int cm, LiquidCrystal_I2C *lcd=nullptr){
     int lastVal = -1;
     while((left-ogLeft) < dist && (right-ogRight) < dist){
         int currentVal = (left-ogLeft != 0) ? (dist - (left-ogLeft)) : dist;
+        if(compass){
+            compass->read();
+            int currentAzimuth = compass->getAzimuth();
+
+            int error = startingAzimuth - currentAzimuth;
+
+            if (error > 180) error -= 360;
+            if (error < -180) error += 360;
+
+            // Serial.println(error);
+            
+            int correction = Kp * error;
+
+            this->speedLeft  = speed + correction;
+            this->speedRight = speed - correction;
+
+            this->setSpeedRight(this->speedRight);
+            this->setSpeedLeft(this->speedLeft);
+        }
         
+
+        
+
         if(lcd && currentVal != lastVal){
             lcd->setCursor(0, 0);
             lcd->print(spaces);  
@@ -300,8 +372,9 @@ void Wheels::goPreciseBack(int cm, LiquidCrystal_I2C *lcd=nullptr){
         }   
         getCounters(left,right);
     }
-    digitalWrite(BEEPER, LOW);
-    Timer1.detachInterrupt();
+    // digitalWrite(BEEPER, LOW);
+    // Timer1.detachInterrupt();
+    this->beepTimer=0;
 
     this->stop();
 }
@@ -326,4 +399,32 @@ void Wheels::testCM(){
         right = this->cntR;
     }
     this->stop();
+}
+
+void Wheels::rotate(int degree, QMC5883LCompass *compass=nullptr){
+    if(compass){
+        compass->read();
+        int start=compass->getAzimuth();
+        int target=start+degree;
+        int current=start;
+        if (target > 180) target -= 360;
+        if (target < -180) target += 360;
+
+        this->setSpeed(160);    
+        if(degree>0){
+            this->speedLeft=160;
+            this->speedRight=-160;
+            this->forwardLeft();
+            this->backRight();
+        }else if(degree<0){
+            this->speedLeft=160;
+            this->speedRight=-160;
+        }
+        
+        while(current!=target){
+            compass->read();
+            current=compass->getAzimuth();
+        }
+        this->stop();
+    }
 }

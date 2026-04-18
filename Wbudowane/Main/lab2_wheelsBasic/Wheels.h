@@ -14,8 +14,10 @@
 
 
 #include <Arduino.h>
+#include <Wire.h>
 #include <LiquidCrystal_I2C.h>
 #include <TimerOne.h>
+#include <QMC5883LCompass.h>
 
 // pin, na którym obserwujemy działanie
 // pin 13 to dioda LED, ale możesz podłączyć też głośnik
@@ -37,6 +39,13 @@ class Wheels {
         int speedLeft;
         volatile int cntL;
         volatile int cntR;
+
+        LiquidCrystal_I2C *lcd=nullptr;
+
+        bool lcdTimer=0;
+        bool beepTimer=0;
+        int beepSpeed;
+
         void getCounters(int &left, int &right);
         /*
          *  pinForward - wejście "naprzód" L298
@@ -74,9 +83,14 @@ class Wheels {
         void goBack(int cm);
         void goForwardWithInfo(int cm, LiquidCrystal_I2C *lcd=nullptr);
         void goBackWithInfo(int cm, LiquidCrystal_I2C *lcd=nullptr);
-        void goPreciseForward(int cm, LiquidCrystal_I2C *lcd=nullptr);
-        void goPreciseBack(int cm, LiquidCrystal_I2C *lcd=nullptr);
+        void goPreciseForward(int cm, LiquidCrystal_I2C *lcd=nullptr, QMC5883LCompass *compass=nullptr);
+        void goPreciseBack(int cm, LiquidCrystal_I2C *lcd=nullptr, QMC5883LCompass *compass=nullptr);
         void testCM();
+        void printSpeed();
+        void rotate(int degree,QMC5883LCompass *compass=nullptr);
+        void doBeep() {
+            digitalWrite(BEEPER, digitalRead(BEEPER) ^ 1);
+        }
 
     private: 
         int pinsRight[3];
