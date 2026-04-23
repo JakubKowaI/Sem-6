@@ -13,6 +13,8 @@ class LCD{
   }
 
   void clear(uint8_t row, uint8_t cols = 16);
+  void print(String m, uint8_t col = 0);
+  void printCountdown(String m, uint8_t time, uint8_t col = 0);
   void printSpeed(int speedLeft,int speedRight);
   void printDist(unsigned int dist);
 };

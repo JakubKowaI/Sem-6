@@ -36,6 +36,11 @@ class Car{
 
     void attachCompass(){
       compass = new Compass();
+      this->lcd->printCountdown("Cal in", 5);
+      this->lcd->print("Cal begins");
+      compass->compass.calibrate();
+      this->lcd->print("Cal done");
+      delay(2000);
     }
 
     void attachLCD(LiquidCrystal_I2C *x){
