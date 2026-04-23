@@ -1,15 +1,20 @@
-#include "Wheels.h"
-// #include <LiquidCrystal_I2C.h>
-// #include <TimerOne.h>
-//#include <PinChangeInterrupt.h>
+#include "Car.h"
+#include "libs.h"
 
-
+#include <TimerOne.h>
 
 
 #define INTINPUT0 A0
 #define INTINPUT1 A1
+// piny dla sonaru (HC-SR04)
+#define TRIG A3
+#define ECHO A2
+
+// pin kontroli serwo (musi być PWM)
+#define SERVO 3
 
 byte LCDAddress = 0x27;
+byte CompassAddress = 0x0D;
 
 LiquidCrystal_I2C lcd(LCDAddress, 16, 2);
 
@@ -18,30 +23,46 @@ long int intPeriod = 500000;
 
 volatile int cntL=0,cntR=0;
 
-Wheels w;
+Car car;
+
 // volatile char cmd;
 
-QMC5883LCompass compass;
 
 bool isLCDConnected() {
-  Wire.beginTransmission(LCDAddress); // or your LCD address
+  Wire.beginTransmission(LCDAddress);
+  return (Wire.endTransmission() == 0);
+}
+
+bool isCompassConnected(){
+  Wire.beginTransmission(CompassAddress);
   return (Wire.endTransmission() == 0);
 }
 
 void setup() {
-  w.attach(2,4,5,7,8,6);
+  Wire.begin();
+  car.attachWheels(2,4,5,7,8,6);
 
-  lcd.init();
-  lcd.backlight();
+  if(isLCDConnected()){
+    car.attachLCD(&lcd);
+    lcd.init();
+    lcd.backlight();
+  }
+
+  if(isCompassConnected()){
+    car.attachCompass();
+  }
+  
+
+//sonar
+  pinMode(TRIG, OUTPUT);    // TRIG startuje sonar
+  pinMode(ECHO, INPUT);     // ECHO odbiera powracający impuls
+
+  car.attachSonar(SERVO);
 
   pinMode(BEEPER, OUTPUT);
   Timer1.initialize(intPeriod);
   Timer1.detachInterrupt();
   Timer1.attachInterrupt(TimerISR);
-  if(isLCDConnected()){
-    w.lcd=&lcd;
-    TimerUpdate();
-  }
 
   pinMode(INTINPUT0, INPUT);
   pinMode(INTINPUT1, INPUT);
@@ -51,108 +72,40 @@ void setup() {
 
   
   Serial.begin(9600);
-  compass.setADDR(0xD);
-  compass.setCalibrationOffsets(593.00, -732.00, 1215.00);
-  compass.setCalibrationScales(1.00, 1.09, 0.92);
-  compass.init();
 
   sei();
 }
 
 void loop() {
 
-  // byte error, address;
-  // int count = 0;
+  car.runAndDodge(160);
 
-  // for(address = 1; address < 127; address++) {
-  //   Wire.beginTransmission(address);
-  //   error = Wire.endTransmission();
-
-  //   if (error == 0) {
-  //     Serial.print("Znaleziono I2C: 0x");
-  //     Serial.println(address, HEX);
-  //     count++;
-  //   }
-  // }
-
-  // if (count == 0)
-  //   Serial.println("Nic nie znaleziono");
-  // while(Serial.available())
-  // {
-  //   cmd = Serial.read();
-  //   switch(cmd)
-  //   {
-  //     case 'w': w.forward(); Serial.println("w"); break;
-  //     case 'x': w.back(); Serial.println("x"); break;
-  //     case 'a': w.forwardLeft(); Serial.println("a"); break;
-  //     case 'd': w.forwardRight(); Serial.println("d"); break;
-  //     case 'z': w.backLeft(); Serial.println("z"); break;
-  //     case 'c': w.backRight(); Serial.println("c"); break;
-  //     case 's': w.stop(); Serial.println("s"); break;
-  //     case '1': w.setSpeedLeft(75); Serial.println("1"); break;
-  //     case '2': w.setSpeedLeft(200);  Serial.println("2"); break;
-  //     case '9': w.setSpeedRight(75); Serial.println("9"); break;
-  //     case '0': w.setSpeedRight(200); Serial.println("0"); break;
-  //     case '5': w.setSpeed(100); Serial.println("5"); break;
-  //   }
-  // }
-  // while(true){
-  //   Serial.println("Going forward");
-  //   w.goForwardWithInfo(200,&lcd);
-  //   Serial.println("Going backward");
-  //   w.goBackWithInfo(200,&lcd);
-  // }
-  while(true){
-    Serial.println("Going forward");
-    w.goPreciseForward(1000, &lcd, &compass);
+  while(true){  
+    //Serial.println("Going forward");
+    //car.goPreciseForward(1000,160);
     // delay(300);
     // Serial.println("Going backward");
     // w.goPreciseBack(10, &lcd, &compass);
     // delay(300);
   }
-  // while(true){
-  //   //w.testCM();
-  //   //delay(3000);
-  //   int pinsRight[3];
-  //   int pinsLeft[3];
-  //   pinsRight[0]=2;
-  //   pinsRight[1]=4;
-  //   pinsRight[2]=5;
-
-  //   pinsLeft[0] = 7;
-  //   pinsLeft[1] = 8;
-  //   pinsLeft[2] = 6;
-
-  //   analogWrite(pinsLeft[2], 160);
-  //   analogWrite(pinsRight[2], 160);
-
-  //   SET_MOVEMENT(pinsRight, HIGH, LOW);
-  //   SET_MOVEMENT(pinsLeft, HIGH, LOW);
-  //   Serial.print(cntL);
-  //   Serial.print(" ");
-  //   Serial.println(cntR);
-  //   delay(200);
-  //   // w.cntL=0;
-  //   // w.cntR=0;
-  // }
 }
 
-void printWrapper(){
-  w.printSpeed();
-}
+// void printWrapper(){
+//   w.printSpeed();
+// }
 
 // aktualizuje Timer1 aktualną wartością intPeriod
-void TimerUpdate() {
-  Timer1.detachInterrupt();
-  Timer1.attachInterrupt(printWrapper);
-}
+// void TimerUpdate() {
+//   Timer1.detachInterrupt();
+//   Timer1.attachInterrupt(printWrapper);
+// }
 
 void TimerISR(){
   static uint8_t counter = 0;
-  counter++;
+  ++counter;
 
-  if (counter % 10 == 0 && w.lcdTimer) w.printSpeed();
-  if (counter % w.beepSpeed == 0 && w.beepTimer) w.doBeep();
+  if (counter % car.lcdTimer == 0 && car.lcd) car.printSpeed();
+  if (counter % car.beepSpeed == 0 && car.beepTimer) car.doBeep();
 }
 
 ISR(PCINT1_vect){
@@ -160,10 +113,17 @@ ISR(PCINT1_vect){
     uint8_t now = PINC;
 
     if ((now & (1 << PC0)) && !(last & (1 << PC0)))
-        w.cntL++;
+        car.w.cntL++;
 
     if ((now & (1 << PC1)) && !(last & (1 << PC1)))
-        w.cntR++;
+        car.w.cntR++;
 
     last = now;
 }
+
+
+
+
+
+
+

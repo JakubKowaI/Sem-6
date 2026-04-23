@@ -1,51 +1,32 @@
-/* 
- * prosta implementacja klasy obsługującej 
- * silniki pojazdu za pośrednictwem modułu L298
- *
- * Sterowanie odbywa się przez:
- * 1)  powiązanie odpowiednich pinów I/O Arduino metodą attach() 
- * 2)  ustalenie prędkości setSpeed*()
- * 3)  wywołanie funkcji ruchu
- *
- * TODO:
- *  - zabezpieczenie przed ruchem bez attach()
- *  - ustawienie domyślnej prędkości != 0
- */
+#pragma once
+
+#include "libs.h"
 
 
-#include <Arduino.h>
-#include <Wire.h>
-#include <LiquidCrystal_I2C.h>
-#include <TimerOne.h>
-#include <QMC5883LCompass.h>
 
 // pin, na którym obserwujemy działanie
 // pin 13 to dioda LED, ale możesz podłączyć też głośnik
 #define BEEPER 13
 
-#ifndef Wheels_h
-#define Wheels_h
-
 #define SET_MOVEMENT(side,f,b) digitalWrite( side[0], f);\
                                digitalWrite( side[1], b)
 
 
-
-
 class Wheels {
     public: 
-        Wheels();
+        
+        Wheels(){};
         int speedRight;
         int speedLeft;
         volatile int cntL;
         volatile int cntR;
 
-        LiquidCrystal_I2C *lcd=nullptr;
+        int jedencm = 7;
+        int iloscSzczelinek = 20;
+        double obwod = 20.8;
 
-        bool lcdTimer=0;
-        bool beepTimer=0;
-        int beepSpeed;
-
+       
+        
         void getCounters(int &left, int &right);
         /*
          *  pinForward - wejście "naprzód" L298
@@ -73,30 +54,22 @@ class Wheels {
          *   - minimalna efektywna wartość 60
          *      może zależeć od stanu naładowania baterii
          */
-        void setSpeed(uint8_t);
-        void setSpeedRight(uint8_t);
-        void setSpeedLeft(uint8_t);
+        void setSpeed(uint8_t s);
+        void setSpeed(uint8_t sl, uint8_t sr);
+        void setSpeedRight(uint8_t s);
+        void setSpeedLeft(uint8_t s);
         /*
          *  moje funkcje
          */
         void goForward(int cm);
         void goBack(int cm);
-        void goForwardWithInfo(int cm, LiquidCrystal_I2C *lcd=nullptr);
-        void goBackWithInfo(int cm, LiquidCrystal_I2C *lcd=nullptr);
-        void goPreciseForward(int cm, LiquidCrystal_I2C *lcd=nullptr, QMC5883LCompass *compass=nullptr);
-        void goPreciseBack(int cm, LiquidCrystal_I2C *lcd=nullptr, QMC5883LCompass *compass=nullptr);
+        void goForwardWithInfo(int cm);
+        void goBackWithInfo(int cm);
+        
         void testCM();
-        void printSpeed();
-        void rotate(int degree,QMC5883LCompass *compass=nullptr);
-        void doBeep() {
-            digitalWrite(BEEPER, digitalRead(BEEPER) ^ 1);
-        }
+        
 
     private: 
         int pinsRight[3];
         int pinsLeft[3];
 };
-
-
-
-#endif

@@ -29,8 +29,8 @@ D a-tiinio.ads		20260209135214 76699c8f ada.text_io.integer_io%s
 D a-unccon.ads		20260209135214 0e9b276f ada.unchecked_conversion%s
 D interfac.ads		20260209135214 9111f9c1 interfaces%s
 D i-cstrea.ads		20260209135214 ffd01b9d interfaces.c_streams%s
-D ring_mod_n.ads	20260418124946 8d89bbd3 ring_mod_n%s
-D ring_mod_n.adb	20260418124946 156c2591 ring_mod_n%b
+D ring_mod_n.ads	20260418125313 8d89bbd3 ring_mod_n%s
+D ring_mod_n.adb	20260418125313 156c2591 ring_mod_n%b
 D system.ads		20260209135214 14286b0f system%s
 D s-crtl.ads		20260209135214 beb39b9e system.crtl%s
 D s-exctab.ads		20260209135214 91bef6ef system.exception_table%s

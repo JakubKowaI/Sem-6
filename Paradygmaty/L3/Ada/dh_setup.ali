@@ -28,11 +28,11 @@ D a-stuten.ads		20260209135214 c6ced0ae ada.strings.utf_encoding%s
 D a-tags.ads		20260209135214 fbca0ad5 ada.tags%s
 D a-textio.ads		20260209135214 34ef47de ada.text_io%s
 D a-unccon.ads		20260209135214 0e9b276f ada.unchecked_conversion%s
-D dh_setup.ads		20260418124946 afd561c0 dh_setup%s
-D dh_setup.adb		20260418125114 822a9b93 dh_setup%b
+D dh_setup.ads		20260418125313 afd561c0 dh_setup%s
+D dh_setup.adb		20260418125313 822a9b93 dh_setup%b
 D interfac.ads		20260209135214 9111f9c1 interfaces%s
 D i-cstrea.ads		20260209135214 ffd01b9d interfaces.c_streams%s
-D ring_mod_n.ads	20260418124946 8d89bbd3 ring_mod_n%s
+D ring_mod_n.ads	20260418125313 8d89bbd3 ring_mod_n%s
 D system.ads		20260209135214 14286b0f system%s
 D s-crtl.ads		20260209135214 beb39b9e system.crtl%s
 D s-exctab.ads		20260209135214 91bef6ef system.exception_table%s
