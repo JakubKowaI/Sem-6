@@ -1,0 +1,177 @@
+\documentclass[11pt,a4paper]{article} % 11pt zamiast 12pt
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[polish]{babel}
+\usepackage[a4paper,margin=2cm]{geometry} % mniejsze marginesy
+
+\usepackage{amsmath,amssymb}
+\usepackage{listings}
+\usepackage{enumitem}
+\usepackage{titlesec}
+
+% kompaktowe sekcje
+\titlespacing*{\section}{0pt}{8pt}{4pt}
+\titlespacing*{\subsection}{0pt}{6pt}{3pt}
+
+% kompaktowe listy
+\setlist[itemize]{noitemsep, topsep=2pt}
+\setlist[enumerate]{noitemsep, topsep=2pt}
+
+% kod bardziej zbity
+\lstset{
+    basicstyle=\ttfamily\footnotesize,
+    breaklines=true,
+    columns=fullflexible,
+    aboveskip=6pt,
+    belowskip=6pt
+}
+
+\linespread{0.96}
+
+\title{\textbf{Sprawozdanie 1}\\Wybrane Zagadnienia Algebry}
+\author{Jakub Kowal\\279706}
+\date{}
+
+\begin{document}
+\maketitle
+
+Użyte parametry: $a=2,\ b=7,\ c=9,\ d=7,\ e=0,\ f=6$.
+
+\section*{1. $\mathbb{Z}[i]$}
+
+\textbf{Reprezentacja:} \texttt{Pair(a,b)} oznacza $a+bi$ (\texttt{first} – rzeczywista, \texttt{second} – urojona).
+
+\textbf{Norma:} $N(a+bi)=a^2+b^2$.
+
+\textbf{Dzielenie:} przybliżenie ilorazu + sprawdzanie floor/ceil; poprawne gdy $N(r)<N(b)$.
+
+{\footnotesize
+\begin{lstlisting}
+function Dziel_wszystkie(a::Pair{<:Integer,<:Integer},b::Pair{<:Integer,<:Integer})
+ denominator = float(Norma(b))
+ real = (a.first*b.first + a.second*b.second) / denominator
+ imag = (a.second*b.first - a.first*b.second) / denominator
+
+ potential_reals = Set([floor(Int, real), ceil(Int, real)])
+ potential_imags = Set([floor(Int, imag), ceil(Int, imag)])
+
+ wyniki = Vector{Tuple{Pair{Int,Int},Pair{Int,Int}}}()
+ for r in potential_reals, i in potential_imags
+  q = Pair(r, i)
+  rem = Odejmij(a, Mnoz(b, q))
+  if Norma(rem) < Norma(b)
+   push!(wyniki, (q, rem))
+  end
+ end
+ return wyniki
+end
+\end{lstlisting}
+}
+
+\textbf{NWD/NWW:} Euklides, $\mathrm{NWW}(a,b)=\frac{ab}{\mathrm{NWD}(a,b)}$.
+
+{\footnotesize
+\begin{lstlisting}
+function NWD(a::Pair{<:Integer,<:Integer},b::Pair{<:Integer,<:Integer})
+ while !(b.first == 0 && b.second == 0)
+  _,r=Dziel(a,b)
+  a=b; b=r
+ end
+ return a
+end
+\end{lstlisting}
+}
+
+\textbf{Wyniki:}
+$N(2-7i)=53$.
+
+$\frac{11+14i}{6i}$ daje:
+\begin{enumerate}
+\item $2-i,\ 5+2i$
+\item $2-2i,\ -1+2i$
+\item $3-3i,\ -1-4i$
+\end{enumerate}
+
+NWD$=1$, NWW$=-217+539i$ (do mnożenia przez $\{1,-1,i,-i\}$).
+
+{\footnotesize
+\begin{lstlisting}
+NWD([a+bi]) = 2 + 7i
+NWD([])     = 0+0i
+\end{lstlisting}
+}
+
+\section*{2. $\mathbb{R}[x]$}
+
+\textbf{Reprezentacja:}
+{\footnotesize
+\begin{lstlisting}
+struct Pierscien{T}
+ coeffs::Dict{Vector{Int}, T}
+end
+\end{lstlisting}
+}
+
+\textbf{Operacje:} norma = stopień, dzielenie klasyczne, NWD – Euklides, NWW – iloczyn/NWD.
+
+\textbf{Wyniki:}
+
+Norma: $2$.
+
+\[
+\frac{9x^2+7}{x+1}=9x-9,\quad r=16
+\]
+
+$v=2x^3+7x^2+9x+7,\quad w=7x^3+6x$
+
+NWD$(v,w)=1$.
+
+Wyznaczono $g=84.48215863265216$, więc:
+\[
+w+g=7x^3+6x+84.48215863265216
+\]
+
+\[
+\mathrm{NWD}(v,w+g)=x+2.1693702699113073
+\]
+
+{\small
+\begin{align*}
+\mathrm{NWW}(v,w+g)= {} & x^5+1.3306x^4+2.4705x^3\\
+&+13.2094x^2+17.4421x+19.4716
+\end{align*}
+}
+
+\section*{3. Porządek produktowy}
+
+\[
+\begin{array}{c|c}
+\text{Porównanie} & \text{Wynik} \\\hline
+(2,7)\le(9,7) & \text{tak}\\
+(2,7)\le(0,6) & \text{nie}\\
+(9,7)\le(2,7) & \text{nie}\\
+(9,7)\le(0,6) & \text{nie}\\
+(0,6)\le(2,7) & \text{tak}\\
+(0,6)\le(9,7) & \text{tak}
+\end{array}
+\]
+
+\[
+(2,9,0)\not\le(7,7,6),\quad (7,7,6)\not\le(2,9,0)
+\]
+
+Minimalne w $A$: $(0,6), (1,5)$.
+
+{\scriptsize
+\begin{lstlisting}
+[0,0,0,16], [0,0,4,15], [0,0,6,14], [0,0,7,13], [0,0,8,0],
+[0,15,0,15], [0,15,4,14], [0,15,6,13], [0,15,7,0],
+[0,16,0,14], [0,16,4,13], [0,16,6,0], [0,17,0,13],
+[0,17,3,0], [19,0,0,15], [19,0,4,14], [19,0,6,13],
+[19,0,7,0], [19,15,0,14], [19,15,4,13], [19,15,5,0],
+[19,16,0,13], [19,16,3,0], [19,17,0,0]
+\end{lstlisting}
+}
+
+\end{document}

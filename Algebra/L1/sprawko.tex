@@ -1,0 +1,296 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[polish]{babel}
+\usepackage[a4paper,margin=2.5cm]{geometry}
+\usepackage{amsmath,amssymb}
+\usepackage{listings}
+
+\linespread{0.96} % lekko ciaśniej (bez psucia czytelności)
+
+\title{\textbf{Sprawozdanie 1}\\Wybrane Zagadnienia Algebry}
+\author{Jakub Kowal\\279706}
+\date{}
+
+\begin{document}
+\maketitle
+
+Użyte parametry do testów:
+\[
+a=2,\ b=7,\ c=9,\ d=7,\ e=0,\ f=6.
+\]
+
+\section*{1. Pierscień liczb Gaussa $\mathbb{Z}[i]$}
+
+\subsection*{Reprezentacja}
+Liczba Gaussa jest reprezentowana jako para liczb całkowitych \texttt{Pair (a, b)},
+czyli element $a+bi$.
+W pliku kodzie:
+\begin{itemize}
+\item \texttt{Pair.first} to czesc rzeczywista,
+\item \texttt{Pair.second} to czesc urojona.
+\end{itemize}
+
+\subsection*{Norma}
+Norma jest liczona jako
+\[
+N(a+bi)=a^2+b^2.
+\]
+
+\subsection*{Dzielenie z resztą}
+Dzielenie jest realizowane przez przybliżenie ilorazu zespolonego i sprawdzenie
+możliwych zaokrągleń (floor/ceil) dla części rzeczywistej i urojonej.
+Reszta jest poprawna, gdy spełnia $N(r) < N(b)$.
+
+Fragment kodu:
+\begin{verbatim}
+function Dziel_wszystkie(a::Pair{<:Integer,<:Integer},b::Pair{<:Integer,<:Integer})
+	denominator = float(Norma(b))
+	real = (a.first*b.first + a.second*b.second) / denominator
+	imag = (a.second*b.first - a.first*b.second) / denominator
+
+	potential_reals = Set([floor(Int, real), ceil(Int, real)])
+	potential_imags = Set([floor(Int, imag), ceil(Int, imag)])
+
+	wyniki = Vector{Tuple{Pair{Int,Int},Pair{Int,Int}}}()
+	for r in potential_reals
+		for i in potential_imags
+			q = Pair(r, i)
+			rem = Odejmij(a, Mnoz(b, q))
+			if Norma(rem) < Norma(b)
+				push!(wyniki, (q, rem))
+			end
+		end
+	end
+	return wyniki
+end
+\end{verbatim}
+
+\subsection*{NWD i NWW}
+NWD jest liczony algorytmem Euklidesa z dzieleniem w $\mathbb{Z}[i]$,
+a NWW ze wzoru
+\[
+\mathrm{NWW}(a,b)=\frac{ab}{\mathrm{NWD}(a,b)}.
+\]
+
+Fragment kodu NWD:
+\begin{verbatim}
+function NWD(a::Pair{<:Integer,<:Integer},b::Pair{<:Integer,<:Integer})
+	while !(b.first == 0 && b.second == 0)
+		_,r=Dziel(a,b)
+		a=b
+		b=r
+	end
+	return a
+end
+\end{verbatim}
+
+\subsection*{Wyniki wywolan z TestyZ1.jl}
+Uzyte parametry:
+\[
+a=2,\ b=7,\ c=9,\ d=7,\ e=0,\ f=6.
+\]
+
+\begin{itemize}
+\item Norma:
+\[
+N(a-bi)=N(2-7i)=2^2+7^2=53.
+\]
+
+\item Dzielenie $(c+a)+(d+b)i$ przez $e+fi$:
+\[
+\frac{11+14i}{6i}.
+\]
+Wyniki z testu (wszystkie znalezione poprawne pary $(q,r)$):
+\begin{enumerate}
+    \item q=$2-i$, r=$5+2i$
+    \item q=$2-2i$, r=$-1+2i$
+    \item q=$3-3i$, r=$-1-4i$
+\end{enumerate}
+
+\item Dlaczego nie ma ich wiecej:
+z metody floor/ceil jest najwyzej 4 kandydatów na iloraz,
+ale tylko ci, ktorzy dają $N(r)<N(b)$, są akceptowani.
+Tutaj 3 kandydatów spełnia warunek.
+
+\item NWD i NWW dla trojki $a+bi, c+di, e+di$:
+\begin{verbatim}
+NWD([a+bi, c+di, e+di]) = 1
+NWW([a+bi, c+di, e+di]) = -217 + 539i
+\end{verbatim}
+Żeby dostać wszystkie wersje w $\mathbb{Z}[i]$ trzeba wymnożyć te wyniki o jednostki $\{1,-1,i,-i\}$.
+
+\item Wywolania listowe:
+\begin{verbatim}
+NWD([a+bi]) = 2 + 7i
+NWD([])     = 0 + 0i
+\end{verbatim}
+W kodzie obsluga pustej listy dla NWD/NWW zwraca $0+0i$.
+Dla listy 1-elementowej funkcje zwracaja ten element.
+\end{itemize}
+
+\section*{2. Pierścień wielomianów $\mathbb{R}[x]$}
+
+\subsection*{Reprezentacja i rozszerzalność}
+Wielomian jest reprezentowany przez
+\begin{verbatim}
+struct Pierscien{T}
+	coeffs::Dict{Vector{Int}, T}
+end
+\end{verbatim}
+Klucz to wektor wykładników, a wartość to współczynnik.
+W $\mathbb{R}[x]$ klucz ma postać jednowymiarową, np. \texttt{[3]} dla $x^3$.
+Ta sama struktura łatwo przechodzi na $\kappa[x_1,\dots,x_n]$,
+bo wtedy klucz to po prostu wektor długości $n$.
+
+\subsection*{Norma, dzielenie, NWD, NWW, rozszerzony NWD}
+\begin{itemize}
+\item Norma wielomianu: bierzemy maksymalny wykładnik przy niezerowym współczynniku (stopień wielomianu), a dla wielomianu zerowego zwracamy $-1$.
+\item Dzielenie z resztą: w każdej iteracji bierzemy iloraz wyrazów wiodących, tworzymy z niego kolejny składnik ilorazu i odejmujemy odpowiednią wielokrotność dzielnika od bieżącej reszty, aż stopień reszty będzie mniejszy od stopnia dzielnika.
+\item NWD: stosujemy algorytm Euklidesa, czyli powtarzamy przejście $(a,b) \mapsto (b, a\bmod b)$ do uzyskania zera.
+\item NWW: liczymy iloczyn wielomianów i dzielimy go przez NWD.
+\item Rozszerzony NWD: równolegle z algorytmem Euklidesa aktualizujemy współczynniki i zwracamy trójkę $(d,s,t)$ taką, że
+\[
+d = s\,a + t\,b.
+\]
+\end{itemize}
+
+\subsection*{Wyniki wywołań z TestyZ2.jl}
+
+\paragraph{a) Norma i dzielenie}
+Norma (stopień) dla naszych danych wynosi:
+\[
+Norma(9x^2+7)=2
+\]
+
+Wynik dzielenia z resztą przez $x+1$ (dokładnie taki dzielnik jest w pliku testowym):
+\[
+\frac{9x^2+7}{x + 1}=9x-9 \text{z resztą:} 16
+\]
+\begin{verbatim}
+(Pierscien{Float64}(Dict([1] => 9.0, [0] => -9.0)),
+ Pierscien{Float64}(Dict([0] => 16.0)))
+\end{verbatim}
+czyli
+\[
+9x^2+7 = (x+1)(9x-9) + 16.
+\]
+
+\paragraph{b) Rozszerzony NWD dla pary $v,w$ oraz wyznaczenie $g$}
+W teście:
+\[
+v(x)=2x^3+7x^2+9x+7,
+\quad
+w(x)=7x^3+6x.
+\]
+
+Z rozszerzonego NWD:
+\begin{verbatim}
+(Pierscien{Float64}(Dict([0] => 1.0)),
+ Pierscien{Float64}(Dict([1] => -0.15668693962003885, [0] => 0.14285714285714288,
+						 [2] => 0.1415762743745689)),
+ Pierscien{Float64}(Dict([1] => -0.09680857734027208, [0] => -0.03148428472900224,
+						 [2] => -0.04045036410701969)))
+\end{verbatim}
+Czyli otrzymujemy, że NWD(v,w) jest 1, czyli że są względnie pierwsze.
+
+Skoro są względnie pierwsze to szukamy stałej $g \in \mathbb{R}$ takiej, że
+\[
+Norma(NWD(v, w+g)) > 0,
+\]
+i $v$ oraz $w+g$ bedą miały wspólny pierwiastek x0. Jeśli x0 jest pierwiastkiem $v$, to wystarczy dobrać
+\[
+g = -w(x0).
+\]
+W implementacji najpierw przybliżamy pierwiastek x0 wielomianu $v$ metodą stycznych (metoda Newtona z Listy 3 na labolatoria z Obliczeń Naukowych), a potem liczymy $g=-w(x0)$.
+
+Wyznaczone zostało
+\[
+g = 84.48215863265216,
+\]
+więc nowe w to:
+\[
+w(x)+g = 7x^3 + 6x + 84.48215863265216.
+\]
+
+Następnie:
+\begin{verbatim}
+NWD(v, w+g) = Pierscien{Float64}(Dict([1] => 1.0, [0] => 2.1693702699113073))
+\end{verbatim}
+czyli
+\[
+\mathrm{NWD}(v,w+g)=x+2.1693702699113073,
+\]
+więc rzeczywiście $1$ nie jest NWD.
+
+Odpowiadające NWW:
+\begin{verbatim}
+Pierscien{Float64}(Dict([5] => 1.0, [4] => 1.330629730088693,
+						[3] => 2.4705142804283398, [2] => 13.20941957331203,
+						[1] => 17.442100068341315, [0] => 19.47158578791304))
+\end{verbatim}
+czyli
+\begin{align*}
+\mathrm{NWW}(v,w+g) = {} & x^5 + 1.330629730088693x^4 \\
+& + 2.4705142804283398x^3 \\
+& + 13.20941957331203x^2 \\
+& + 17.442100068341315x \\
+& + 19.47158578791304
+\end{align*}
+
+\section*{3. Porządki produktowe w $\mathbb{N}^{n}$}
+Sprawdzane pary w $\mathbb{N}^{2}$:
+\begin{itemize}
+    \item (2,7)
+    \item (9,7)
+    \item (0,6)
+\end{itemize}
+Wyniki dla par:
+\[
+\begin{array}{c}
+\text{Porównanie} \\\hline
+(2,7)\le(9,7) \\
+(2,7)\not \le(0,6)\\
+(9,7)\not \le(2,7)\\
+(9,7)\not \le(0,6) \\
+(0,6)\le(2,7) \\
+(0,6)\le(9,7)
+\end{array}
+\]
+
+Sprawdzane trójki w $\mathbb{N}^{3}$:
+\begin{itemize}
+    \item (2,9,0)
+    \item (7,7,6)
+\end{itemize}
+Wyniki dla trójek:
+
+\[
+\begin{array}{c}
+    \text{Porównanie}\\\hline
+(2,9,0)\not \le(7,7,6)\\
+(7,7,6)\not \le(2,9,0)
+\end{array}
+\]
+
+Punkty minimalne znalezione w A = \{(x,y)$\in \mathbb{N}^{2}$: $(x-2)^{2}+(y-7)^{2}$<5\}:
+\begin{itemize}
+    \item (0,6)
+    \item (1,5)
+\end{itemize}
+
+Lista punktów znalezionych w B = \{($x_{1},x_{2},x_{3},x_{4}$)$\in \mathbb{N}^{4}$: $(x_{1}-9)^{2} + (x_{2}-7)^{2} + (x_{3}-0)^{2} + (x_{4} - 6)^{2} > 224 $\}
+{\scriptsize
+\begin{lstlisting}
+[0,0,0,16], [0,0,4,15], [0,0,6,14], [0,0,7,13], [0,0,8,0],
+[0,15,0,15], [0,15,4,14], [0,15,6,13], [0,15,7,0],
+[0,16,0,14], [0,16,4,13], [0,16,6,0], [0,17,0,13],
+[0,17,3,0], [19,0,0,15], [19,0,4,14], [19,0,6,13],
+[19,0,7,0], [19,15,0,14], [19,15,4,13], [19,15,5,0],
+[19,16,0,13], [19,16,3,0], [19,17,0,0]
+\end{lstlisting}
+}
+
+\section*{Wykorzystanie Sztucznej Inteligencji}
+Wykorzystałem sztuczną inteligencję w ramach wsparcia redakcji opisów implementacji oraz usprawnienia przeszukiwania dokumentacji języka Julia
+\end{document}
