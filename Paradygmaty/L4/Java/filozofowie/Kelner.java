@@ -1,3 +1,4 @@
+// package L4.Java.filozofowie;
 // package L4.Java;
 import java.util.concurrent.PriorityBlockingQueue;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -31,21 +32,17 @@ public class Kelner extends Thread{
     @Override
     public void run(){
         while(najedzeni.get() < filozofNum){
-            // spróbuj pobrać filozofa z kolejki bez blokowania
             Filozof x = lista.poll();
             if(x != null){
-                // jeśli są dostępne co najmniej 2 widelce, przydziel je
                 if(widelce.get() >= 2){
                     if(widelce.addAndGet(-2) >= 0){
                         x.sem.release();
                     } else {
-                        // przywróć widelce gdyby coś poszło nie tak i odłóż filozofa
                         widelce.addAndGet(2);
                         lista.add(x);
                         Thread.yield();
                     }
                 } else {
-                    // brak widelców, odłóż filozofa i poczekaj
                     lista.add(x);
                     Thread.yield();
                 }

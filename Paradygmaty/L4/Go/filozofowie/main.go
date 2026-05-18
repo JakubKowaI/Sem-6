@@ -13,6 +13,11 @@ type Philosopher struct {
 	grant chan struct{}
 }
 
+type Result struct {
+	id    int
+	eaten int
+}
+
 func waiter(N int, requestCh <-chan *Philosopher, releaseCh <-chan struct{}, thankYouCh <-chan struct{}, done chan<- struct{}) {
 	forks := N
 	queue := make([]*Philosopher, 0)
@@ -43,16 +48,18 @@ func waiter(N int, requestCh <-chan *Philosopher, releaseCh <-chan struct{}, tha
 	}
 }
 
-func philosopher(id, hunger int, requestCh chan<- *Philosopher, releaseCh chan<- struct{}, thankYouCh chan<- struct{}, wg *sync.WaitGroup) {
+func philosopher(id, hunger int, requestCh chan<- *Philosopher, releaseCh chan<- struct{}, thankYouCh chan<- struct{}, resultCh chan<- Result, wg *sync.WaitGroup) {
 	defer wg.Done()
 	p := &Philosopher{id: id, grant: make(chan struct{})}
+	eaten := 0
 	for i := 0; i < hunger; i++ {
 		requestCh <- p
 		<-p.grant
-		fmt.Printf("Filozof %d je.\n", id)
 		time.Sleep(100 * time.Millisecond)
 		releaseCh <- struct{}{}
+		eaten++
 	}
+	resultCh <- Result{id: id, eaten: eaten}
 	thankYouCh <- struct{}{}
 }
 
@@ -76,6 +83,7 @@ func main() {
 	releaseCh := make(chan struct{})
 	thankYouCh := make(chan struct{})
 	done := make(chan struct{})
+	resultCh := make(chan Result, N)
 
 	var wg sync.WaitGroup
 	wg.Add(N)
@@ -83,10 +91,20 @@ func main() {
 	go waiter(N, requestCh, releaseCh, thankYouCh, done)
 
 	for i := 1; i <= N; i++ {
-		go philosopher(i, hunger, requestCh, releaseCh, thankYouCh, &wg)
+		go philosopher(i, hunger, requestCh, releaseCh, thankYouCh, resultCh, &wg)
 	}
 
 	<-done
 	wg.Wait()
-	fmt.Println("Wszyscy filozofowie zakonczone.")
+
+	results := make([]int, N)
+	for i := 0; i < N; i++ {
+		r := <-resultCh
+		results[r.id-1] = r.eaten
+	}
+
+	for i := 1; i <= N; i++ {
+		fmt.Printf("Filozof %d\n", i)
+		fmt.Printf("%d\n", results[i-1])
+	}
 }

@@ -2,6 +2,7 @@
 #include "libs.h"
 
 #include <TimerOne.h>
+#include <IRremote.hpp>
 
 
 #define INTINPUT0 A0
@@ -13,6 +14,8 @@
 // pin kontroli serwo (musi być PWM)
 #define SERVO 3
 
+const int IR_RECEIVE_PIN = 11;
+
 byte LCDAddress = 0x27;
 byte CompassAddress = 0x0D;
 
@@ -22,6 +25,9 @@ LiquidCrystal_I2C lcd(LCDAddress, 16, 2);
 long int intPeriod = 500000;
 
 volatile int cntL=0,cntR=0;
+
+uint32_t code[4]={0xBA45FF00,0xB946FF00,0xB847FF00,0xBB44FF00};
+int count=0;
 
 Car car;
 
@@ -60,9 +66,9 @@ void setup() {
   car.attachSonar(SERVO);
 
   pinMode(BEEPER, OUTPUT);
-  Timer1.initialize(intPeriod);
-  Timer1.detachInterrupt();
-  Timer1.attachInterrupt(TimerISR);
+  // Timer1.initialize(intPeriod);
+  // Timer1.detachInterrupt();
+  // Timer1.attachInterrupt(TimerISR);
 
   pinMode(INTINPUT0, INPUT);
   pinMode(INTINPUT1, INPUT);
@@ -73,32 +79,46 @@ void setup() {
   
   Serial.begin(9600);
 
+  //IR
+  IrReceiver.begin(IR_RECEIVE_PIN, ENABLE_LED_FEEDBACK);
+  Serial.println("Słucham");
+
   sei();
 }
 
 void loop() {
+  
+  if (IrReceiver.decode()) {
+    
+        
 
-  car.runAndDodge(160);
+        
 
-  while(true){  
-    //Serial.println("Going forward");
-    //car.goPreciseForward(1000,160);
-    // delay(300);
-    // Serial.println("Going backward");
-    // w.goPreciseBack(10, &lcd, &compass);
-    // delay(300);
-  }
+        if(IrReceiver.decodedIRData.decodedRawData==0){
+
+        }else if(IrReceiver.decodedIRData.decodedRawData==code[count]){
+          Serial.print("Protocol: ");
+          Serial.println(getProtocolString(IrReceiver.decodedIRData.protocol));
+
+          Serial.print("Code: ");
+          Serial.println(IrReceiver.decodedIRData.decodedRawData, HEX);
+          ++count;
+          if(count==4)Serial.println("Kod poprawny!");
+        }else{
+          Serial.print("Protocol: ");
+          Serial.println(getProtocolString(IrReceiver.decodedIRData.protocol));
+
+          Serial.print("Code: ");
+          Serial.println(IrReceiver.decodedIRData.decodedRawData, HEX);
+          Serial.println("Wrong password! \nStart again!");
+          count=0;
+        }
+
+        IrReceiver.resume(); // Receive next signal
+    }
+  // car.runAndDodge(160);
+  
 }
-
-// void printWrapper(){
-//   w.printSpeed();
-// }
-
-// aktualizuje Timer1 aktualną wartością intPeriod
-// void TimerUpdate() {
-//   Timer1.detachInterrupt();
-//   Timer1.attachInterrupt(printWrapper);
-// }
 
 void TimerISR(){
   static uint8_t counter = 0;

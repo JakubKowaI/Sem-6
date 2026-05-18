@@ -10,10 +10,11 @@
 class Sonar{
   public:
   Sonar();
-  Servo serwo;
+  Servo *serwo = nullptr;
 
   void attachServo(int ch){
-    serwo.attach(ch);
+    serwo = new Servo();
+    serwo->attach(ch);
   };
 
   unsigned int lookAndTellDistance(int angle);

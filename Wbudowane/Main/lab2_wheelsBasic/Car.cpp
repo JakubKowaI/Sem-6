@@ -108,6 +108,7 @@ void Car::goPreciseBack(int cm, uint8_t sp) {
 }
 
 void Car::rotate(int degree, uint8_t sp) {
+  // Serial.println("ROTATE");
   this->w.setSpeed(sp);
   if (this->compass) {
     this->compass->read();
@@ -138,21 +139,26 @@ void Car::rotate(int degree, uint8_t sp) {
   }else{
     int left, right, ogLeft, ogRight;
     this->w.getCounters(ogLeft, ogRight);
+    this->w.getCounters(left, right);
     
     // TODO zmierzyć stała tutaj *|/
     int dist = abs(degree);
 
-    if (degree > 0) {
-      // this->w.speedLeft = 160;
-      // this->w.speedRight = -160;
-      this->w.forwardLeft();
-      this->w.backRight();
-    } else if (degree < 0) {
-      // this->w.speedLeft = 160;
-      // this->w.speedRight = -160;
-      this->w.backRight();
-      this->w.forwardLeft();
+    while(left-ogLeft<dist){
+      if (degree > 0) {
+        // this->w.speedLeft = 160;
+        // this->w.speedRight = -160;
+        this->w.forwardLeft();
+        this->w.backRight();
+      } else if (degree < 0) {
+        // this->w.speedLeft = 160;
+        // this->w.speedRight = -160;
+        this->w.backLeft();
+        this->w.forwardRight();
+      }
+      this->w.getCounters(left, right);
     }
+    
   }
   this->w.stop();
 }
@@ -184,8 +190,11 @@ void Car::runAndDodge(uint8_t speed){
       this->lcd->printDist(dist);
 
       if(dist<30){
-        if(i<=1)dodgeLeft();
-        else dodgeRight();
+        if(i<=1){
+          dodgeLeft();
+          }else{
+            dodgeRight();
+            }
       }
     }
   }
