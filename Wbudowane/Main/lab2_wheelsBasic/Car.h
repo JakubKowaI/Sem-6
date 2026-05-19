@@ -69,4 +69,6 @@ public:
 
   void runAndDodge(uint8_t speed);
 
+  void l7Start();
+
 };

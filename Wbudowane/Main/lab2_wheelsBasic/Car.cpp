@@ -200,3 +200,43 @@ void Car::runAndDodge(uint8_t speed){
   }
   
 }
+
+void Car::l7Start(){
+  int baseSpeed=117;
+  int target = 60;
+  if(!sonar)return;
+  // this->w.setSpeed(speed);
+  // this->w.forward();
+  // Serial.println("Czytam");
+
+  int dist = this->sonar->lookAndTellDistance(90);
+
+  float alfa = 7.5;
+
+  if(dist>2*target)dist=2*target;
+
+  double w = alfa*abs(dist-target)*abs(dist-target);
+
+  
+
+  this->lcd->printDist(dist);
+
+  
+
+  // abs(dist-100);
+  int power = map(w,0,(long)(alfa*target*target),baseSpeed,255);
+
+  this->w.setSpeed(power);
+
+  
+
+  if(dist>target+5){
+    this->w.forward();
+  }else if(dist<target-5){
+    this->w.back();
+  }else{
+    this->w.stop();
+  }
+
+  
+}

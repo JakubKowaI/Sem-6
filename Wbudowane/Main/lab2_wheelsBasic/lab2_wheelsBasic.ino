@@ -80,42 +80,44 @@ void setup() {
   Serial.begin(9600);
 
   //IR
-  IrReceiver.begin(IR_RECEIVE_PIN, ENABLE_LED_FEEDBACK);
-  Serial.println("Słucham");
+  // IrReceiver.begin(IR_RECEIVE_PIN, ENABLE_LED_FEEDBACK);
+  // Serial.println("Słucham");
+
+  
 
   sei();
 }
 
 void loop() {
   
-  if (IrReceiver.decode()) {
-    
-        
+  car.l7Start();
+  car.printSpeed();
+  // if (IrReceiver.decode()) {
+  //       if(IrReceiver.decodedIRData.decodedRawData==0){
 
-        
+  //       }else if(IrReceiver.decodedIRData.decodedRawData==code[count]){
+  //         Serial.print("Protocol: ");
+  //         Serial.println(getProtocolString(IrReceiver.decodedIRData.protocol));
 
-        if(IrReceiver.decodedIRData.decodedRawData==0){
+  //         Serial.print("Code: ");
+  //         Serial.println(IrReceiver.decodedIRData.decodedRawData, HEX);
+  //         ++count;
+  //         if(count==4)Serial.println("Kod poprawny!");
+  //       }else{
+  //         Serial.print("Protocol: ");
+  //         Serial.println(getProtocolString(IrReceiver.decodedIRData.protocol));
 
-        }else if(IrReceiver.decodedIRData.decodedRawData==code[count]){
-          Serial.print("Protocol: ");
-          Serial.println(getProtocolString(IrReceiver.decodedIRData.protocol));
+  //         Serial.print("Code: ");
+  //         Serial.println(IrReceiver.decodedIRData.decodedRawData, HEX);
+  //         Serial.println("Wrong password! \nStart again!");
+  //         count=0;
+  //       }
+  //       IrReceiver.resume(); // Receive next signal
+  //   }
 
-          Serial.print("Code: ");
-          Serial.println(IrReceiver.decodedIRData.decodedRawData, HEX);
-          ++count;
-          if(count==4)Serial.println("Kod poprawny!");
-        }else{
-          Serial.print("Protocol: ");
-          Serial.println(getProtocolString(IrReceiver.decodedIRData.protocol));
 
-          Serial.print("Code: ");
-          Serial.println(IrReceiver.decodedIRData.decodedRawData, HEX);
-          Serial.println("Wrong password! \nStart again!");
-          count=0;
-        }
 
-        IrReceiver.resume(); // Receive next signal
-    }
+
   // car.runAndDodge(160);
   
 }
