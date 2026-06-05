@@ -23,7 +23,6 @@ func waiter(N int, requestCh <-chan *Philosopher, releaseCh <-chan struct{}, tha
 	queue := make([]*Philosopher, 0)
 	finished := 0
 	for {
-		// if possible, grant to queued philosophers
 		if forks >= 2 && len(queue) > 0 {
 			p := queue[0]
 			queue = queue[1:]
@@ -40,7 +39,6 @@ func waiter(N int, requestCh <-chan *Philosopher, releaseCh <-chan struct{}, tha
 		case <-thankYouCh:
 			finished++
 			if finished == N {
-				// all done
 				done <- struct{}{}
 				return
 			}

@@ -24,7 +24,10 @@ public class User implements Runnable{
     public void send(){
         int target = rand.nextInt(s.users.length);
         System.out.println("Wysylam wiadomosc do " + target);
-        s.receive(target);
+        s.receive(target, this);
+    }
+
+    public void acknowledge(){
         sent++;
     }
 

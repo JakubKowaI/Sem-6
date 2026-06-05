@@ -1,0 +1,8 @@
+W Desmosie
+
+r=a\cos(2\theta)+b\cos(m\theta+p)
+
+a=0
+b=3.2
+m=3.8
+p=0.3 (opcjonalne)

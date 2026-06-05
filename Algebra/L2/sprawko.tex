@@ -1,0 +1,202 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[polish]{babel}
+\usepackage[a4paper,margin=2.5cm]{geometry}
+\usepackage{amsmath,amssymb}
+\usepackage{listings}
+\usepackage{pgfplots}
+\pgfplotsset{width=10cm,compat=1.9}
+\usepackage{pdfcomment}
+\usepackage{svg}
+\usepackage{float}
+
+
+% Externalization requires -shell-escape; disable to avoid build errors.
+%\usepgfplotslibrary{external}
+%\tikzexternalize
+
+\linespread{0.96} % lekko ciaśniej (bez psucia czytelności)
+
+\title{\textbf{Sprawozdanie 1}\\Wybrane Zagadnienia Algebry}
+\author{Jakub Kowal\\279706}
+\date{}
+
+%https://tex.stackexchange.com/questions/212793/how-can-i-typeset-julia-code-with-the-listings-package
+
+\lstdefinelanguage{Julia}%
+  {morekeywords={abstract,break,case,catch,const,continue,do,else,elseif,%
+      end,export,false,for,function,immutable,import,importall,if,in,%
+      macro,module,otherwise,quote,return,switch,true,try,type,typealias,%
+      using,while},%
+   sensitive=true,%
+   alsoother={$},%
+   morecomment=[l]\#,%
+   morecomment=[n]{\#=}{=\#},%
+   morestring=[s]{"}{"},%
+   morestring=[m]{'}{'},%
+}[keywords,comments,strings]%
+
+\begin{document}
+\maketitle
+
+Użyte parametry do testów:
+\[
+a=2,\ b=7,\ c=9,\ d=7,\ e=0,\ f=6.
+\]
+
+\section*{Zadanie 1 z listy 2}
+
+\subsection*{a)}
+Tworzymy strukturę $Wielomian$, która przechowuje jednomiany w strukturze \pdftooltip{\textit{Dict*}}{Struktura \textit{słownik} podobna do \textit{map} znanych z innych języków programowania} w postaci wektorów z wykładnikami potęg zmiennych oraz współczynnika przy nich. Dodatkowo przechowuje również liczbę tych zmiennych.
+
+\subsection*{b)}
+\subsubsection*{Standardowy Lex}
+Standardowy Lex porównuje jednomiany na podstawie wektora wykładników. Idąc ustaloną kolejnością, jeżeli jeden z wykładników będzie mniejszy niż wykładnik tej samej zmiennej w drugim jednomianie, to wiemy, że drugi $<_{\mathrm{lex}}$ pierwszy. Przykład: 
+
+\[
+x^2y\ \text{vs}\ xy^2:\quad
+\alpha=(2,1),\ \beta=(1,2),\ \text{pierwsza różnica przy }i=1:\ 2>1
+\]
+czyli \(xy^2 <_{\mathrm{lex}} x^2y\).
+
+\[
+x^2\ \text{vs}\ x^2y:\quad
+\alpha=(2,0),\ \beta=(2,1),\ \text{pierwsza różnica przy }i=2:\ 0<1
+\]
+czyli \(x^2 <_{\mathrm{lex}} x^2y\).
+
+\subsubsection*{Permutowany Lex}
+Działa na takiej zasadzie jak Standardowy Lex, ale permutujemy kolejność zmiennych, czyli "priorytet" wykładników.
+
+\subsubsection*{GradedLex}
+GradedLex działa na takiej samej zasadzie co Standardowy Lex, ale w pierwszej kolejności bierze pod uwagę sumę wykładników. 
+
+\subsection*{c)}
+
+\subsection*{Opis funkcji \texttt{PolynomialReduce}}
+Funkcja \texttt{PolynomialReduce} realizuje redukcje wielomianu $f$ względem zbioru wielomianow $G$ w ustalonym porzadku jednomianow. Zwraca wektory wielomianow $\alpha_1,\dots,\alpha_m$ oraz reszte $r$ takie, ze
+\[
+f = \sum_{i=1}^{m} \alpha_i g_i + r,
+\]
+przy czym żadny jednomian z $r$ nie jest podzielny przez wyraz wiodacy żadnego $g_i$ (wzgladem zadanego porzadku). Algorytm działa iteracyjnie na kopii $p$ wielomianu $f$: w każdym kroku bierze wyraz wiodący $(x^{e_p}, c_p)$, próuje znalezc $g_i$ z $G$ o wyrazie wiodącym $(x^{e_g}, c_g)$ dzielącym $x^{e_p}$, a następnie odejmuje odpowiedni wielomian $t\cdot g_i$, gdzie
+\[
+t = \frac{c_p}{c_g} x^{e_p - e_g}.
+\]
+Jesli taka redukcja jest możliwa, aktualizuje $p$ i $\alpha_i$; w przeciwnym razie przenosi wyraz wiodący do reszty $r$.
+
+Kluczowy fragment implementacji (pętla redukcji):
+\begin{lstlisting}[language=Julia]
+while !isempty(p.coeffs)
+    e_p, c_p = leading_term(p, order)
+    reduced = false
+
+    for (i, g) in enumerate(G)
+        isempty(g.coeffs) && continue
+        e_g, c_g = leading_term(g, order)
+        if monomial_divides(e_g, e_p)
+            exp_diff = sub_exp(e_p, e_g)
+            coeff_mult = c_p / c_g
+            t = monomial(coeff_mult, exp_diff, f.nvars)
+            alphas[i] = alphas[i] + t
+            p = p - t * g
+            reduced = true
+            break
+        end
+    end
+
+    if !reduced
+        lt = monomial(c_p, e_p, f.nvars)
+        r = r + lt
+        p = p - lt
+    end
+end
+\end{lstlisting}
+
+\subsubsection*{d)}
+Zadanie 37 z ćwiczeń:
+\begin{center}
+    $f = x^{3} - x^{2}y - x^{2}z$\\
+$g_{1} = x^{2}y - z$\\
+$g_{2} = xy - 1$
+\end{center}
+Porządek GradedLex (z $<_{\mathrm{lex}}$ y $<_{\mathrm{lex}}$ x)\\
+\begin{enumerate}
+    \item Redukcja f przez ($g_{1},g_{2}$)
+    \item Redukcja f przez ($g_{2},g_{1}$)
+    \item Czy $r_{1} - r_{2} \in <g_{1},g_{2}>$?
+\end{enumerate}
+
+Wyniki:
+\begin{enumerate}
+    \item $f=-1 * g_{1} + 0*g_{2} + r_{1}$\\$r_{1} = x^{3} - x^{2}z - z$
+    \item $f=-x * g_{2} + 0*g_{1} + r_{2}$\\$r_{2} = x^{3} - x^{2}z - x$
+    \item $r_{1} - r_{2} \notin <g_{1},g_{2}>$
+\end{enumerate}
+
+Różnica wynika z tego, że \textit{PolynomialReduce} jest algorytmem zależnym od kolejności dzielników: w każdej iteracji bierze pierwszy wielomian z listy, którego wyraz wiodący dzieli wyraz wiodący reszty. Po zamianie $g_{1}$ i $g_{2}$ zmienia się, który reduktor „złapie” jako pierwszy, więc ścieżka redukcji i współczynniki w alphas są inne, a także sama reszta ($r_{1}$ i $r_{2}$).
+
+\subsubsection*{e)}
+Dla danych $a = 2,b= 7,c = 9,d = 7,e = 0,f= 6$ mamy
+\[
+h = x^{2}y^{7} + y^{9}z^{7} + z^{6}
+\]
+oraz przykład
+\[
+G = \{x^{2}y^{7} - z^{6},\; y^{9}z^{7} - x^{2}y^{7}\}.
+\]
+Wyniki redukcji (różne porządki leksykograficzne):
+\begin{enumerate}
+    \item Lex $z<_{\mathrm{lex}}y<_{\mathrm{lex}}x$:\quad $r = y^{9}z^{7} + 2z^{6}$
+    \item Lex $x<_{\mathrm{lex}}z<_{\mathrm{lex}}y$:\quad $r = 3z^{6}$
+    \item Lex $y<_{\mathrm{lex}}x<_{\mathrm{lex}}z$:\quad $r = x^{2}y^{16}z + 2x^{2}y^{7}$
+\end{enumerate}
+
+Różnice wynikają z tego, że porządek leksykograficzny zmienia wyraz wiodący zarówno w $h$, jak i w wielomianach z $G$. To wpływa na to, który dzielnik jest wybierany w algorytmie oraz jak przebiega ścieżka redukcji.
+
+
+\section*{Zadanie 2 z listy 2}
+
+\def\a{0}
+\def\b{3.2}
+\def\m{3.8}
+\def\p{0}
+
+\begin{center}
+    % $r=\a \cos(\frac{2}{\theta}) + \b \cos(\m * \theta + \p)$
+    $r=\b \sin(\m * \theta)$
+\end{center}
+
+\begin{center}
+    \begin{tikzpicture}
+    \begin{axis}[
+        axis equal,
+        grid=both,
+        samples=1200,
+        domain=0:10*pi,
+    ]
+    \addplot[color=red, parametric] (
+        {(\b*sin(deg(\m*x)))*cos(deg(x))},
+        {(\b*sin(deg(\m*x)))*sin(deg(x))}
+    );
+    \end{axis}
+    \end{tikzpicture}
+\end{center}
+
+
+Dla porównania godło Japonii:
+
+\begin{center}
+   \begin{figure}[H]
+        \caption{Godło Japonii}
+        \hspace*{0.20\textwidth}
+        \includesvg[width=250pt]{Imperial_Seal_of_Japan.svg}
+        \label{rys:godlo}
+    \end{figure} 
+\end{center}
+
+
+
+\section*{Wykorzystanie Sztucznej Inteligencji}
+Wykorzystałem sztuczną inteligencję w ramach wsparcia redakcji opisów implementacji oraz usprawnienia przeszukiwania dokumentacji języka Julia
+\end{document}

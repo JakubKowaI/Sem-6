@@ -3,7 +3,6 @@ with Ada.Command_Line; use Ada.Command_Line;
 with Ada.Calendar; use Ada.Calendar;
 
 procedure Main is
-   -- Simple Ada implementation of the dining philosophers with a central waiter (Kelner)
 
    function Img(N : Natural) return String is
       S : constant String := Natural'Image(N);
@@ -97,7 +96,7 @@ procedure Main is
       for I in 1 .. Hunger loop
          Waiter.Request;
          Stats.Inc(Id);
-         delay 0.1; -- seconds
+         delay 0.1;
          Waiter.Release;
       end loop;
       Waiter.Thank_You;
@@ -109,7 +108,6 @@ procedure Main is
    N : Positive := 5;
    Hunger : Natural := 3;
 begin
-   -- read args if provided
    if Argument_Count >= 1 then
       N := Positive'Value(Argument(1));
    end if;
@@ -120,7 +118,6 @@ begin
    Waiter.Init(N);
    Stats.Init(N);
 
-   -- create dynamic array of philosopher tasks
    declare
       type Ph_Arr_Type is array (Positive range <>) of Philosopher_Access;
       Phs : Ph_Arr_Type(1 .. N);
@@ -128,8 +125,6 @@ begin
       for I in Phs'Range loop
          Phs(I) := new Philosopher_Type(Positive(I), Hunger);
       end loop;
-
-      -- wait until all philosophers finished
       while not Waiter.Finished loop
          delay 0.1;
       end loop;
