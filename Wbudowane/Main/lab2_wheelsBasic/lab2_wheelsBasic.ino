@@ -46,6 +46,7 @@ bool isCompassConnected(){
 
 void setup() {
   Wire.begin();
+  Serial.begin(9600);
   car.attachWheels(2,4,5,7,8,6);
 
   if(isLCDConnected()){
@@ -54,8 +55,13 @@ void setup() {
     lcd.backlight();
   }
 
+  
+
   if(isCompassConnected()){
+    Serial.println("Compass attached!");
     car.attachCompass();
+  }else{
+    Serial.println("Compass not detected!");
   }
   
 
@@ -77,7 +83,7 @@ void setup() {
   PCMSK1 = 0x03;  // włącz przerwanie dla A0, A1
 
   
-  Serial.begin(9600);
+  
 
   //IR
   // IrReceiver.begin(IR_RECEIVE_PIN, ENABLE_LED_FEEDBACK);
@@ -86,12 +92,14 @@ void setup() {
   
 
   sei();
+
+  car.measure();
 }
 
 void loop() {
   
-  car.l7Start();
-  car.printSpeed();
+  // car.l7Start();
+  // car.printSpeed();
   // if (IrReceiver.decode()) {
   //       if(IrReceiver.decodedIRData.decodedRawData==0){
 

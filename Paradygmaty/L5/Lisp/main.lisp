@@ -18,14 +18,14 @@
       (nth k (pascal-row n))))
 
 (defun split (lst)
-  (labels ((go (xs left right)
+  (labels ((loop-split (xs left right)
              (cond ((endp xs) (values (nreverse left) (nreverse right)))
                    ((endp (cdr xs))
                     (values (nreverse (cons (car xs) left)) (nreverse right)))
-                   (t (go (cddr xs)
+                   (t (loop-split (cddr xs)
                           (cons (car xs) left)
                           (cons (cadr xs) right))))))
-    (go lst nil nil)))
+    (loop-split lst nil nil)))
 
 (defun merge-sorted (a b)
   (cond ((endp a) b)
@@ -60,23 +60,23 @@
     (factor n 2)))
 
 (defun totient (n)
-  (labels ((count (k acc)
+  (labels ((count-totient (k acc)
              (if (> k n)
                  acc
-                 (count (1+ k) (if (= (gcd k n) 1) (1+ acc) acc)))))
-    (if (<= n 0) 0 (count 1 0))))
+                 (count-totient (1+ k) (if (= (gcd k n) 1) (1+ acc) acc)))))
+    (if (<= n 0) 0 (count-totient 1 0))))
 
 (defun group-factors (lst)
-  (labels ((go (xs current count acc)
+  (labels ((loop-group (xs current count acc)
              (cond ((endp xs)
                     (nreverse (cons (list current count) acc)))
                    ((= (car xs) current)
-                    (go (cdr xs) current (1+ count) acc))
+                    (loop-group (cdr xs) current (1+ count) acc))
                    (t
-                    (go (cdr xs) (car xs) 1 (cons (list current count) acc))))))
+                    (loop-group (cdr xs) (car xs) 1 (cons (list current count) acc))))))
     (if (endp lst)
         nil
-        (go (cdr lst) (car lst) 1 nil))))
+        (loop-group (cdr lst) (car lst) 1 nil))))
 
 (defun phi-from-groups (groups)
   (if (endp groups)

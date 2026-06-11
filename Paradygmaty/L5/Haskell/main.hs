@@ -79,13 +79,14 @@ primes :: Integer -> [Integer]
 primes n
   | n < 2 = []
   | otherwise = filter isPrime [2..n]
+
+isPrime :: Integer -> Bool
+isPrime m
+  | m < 2 = False
+  | m == 2 = True
+  | otherwise = null [d | d <- [2..limit], m `mod` d == 0]
   where
-    isPrime m
-      | m < 2 = False
-      | m == 2 = True
-      | otherwise = null [d | d <- [2..limit], m `mod` d == 0]
-      where
-        limit = floor (sqrt (fromIntegral m :: Double)) :: Integer
+    limit = floor (sqrt (fromIntegral m :: Double)) :: Integer
 
 main :: IO ()
 main = pure ()

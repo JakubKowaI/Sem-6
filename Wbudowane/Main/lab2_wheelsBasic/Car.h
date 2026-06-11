@@ -38,9 +38,12 @@ public:
   void attachCompass() {
     compass = new Compass();
     this->lcd->printCountdown("Cal in", 5);
+    Serial.println("Cal in 5");
     this->lcd->print("Cal begins");
+    Serial.println("Cal begins!");
     compass->compass.calibrate();
     this->lcd->print("Cal done");
+    Serial.println("Cal done");
     delay(2000);
   }
 
@@ -61,8 +64,11 @@ public:
 
   void goPreciseForward(int cm, uint8_t sp);
   void goPreciseBack(int cm, uint8_t sp);
+  void goForward(int cm, uint8_t sp);
+  void goBack(int cm, uint8_t sp);
 
   void rotate(int degree, uint8_t sp);
+  void rotateByWheels(int degree, uint8_t sp);
 
   void dodgeLeft();
   void dodgeRight();
@@ -70,5 +76,7 @@ public:
   void runAndDodge(uint8_t speed);
 
   void l7Start();
+
+  void measure(int dist = 10, int row = 3, int column = 3);
 
 };
