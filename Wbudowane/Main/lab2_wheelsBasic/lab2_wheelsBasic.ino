@@ -31,7 +31,10 @@ int count=0;
 
 Car car;
 
-// volatile char cmd;
+volatile char cmd;
+
+int r = 3;
+int c = 3;
 
 
 bool isLCDConnected() {
@@ -93,10 +96,38 @@ void setup() {
 
   sei();
 
-  car.measure();
+  // car.measure(10, 180, r, c);
+
+  // car.liveCompass();
+
+  int table[9];
+  EEPROM.get(0,table);
 }
 
 void loop() {
+
+
+  while(Serial.available())
+  {
+    cmd = Serial.read();
+    switch(cmd)
+    {
+      // case 'w': w.forward(); Serial.println("w"); break;
+      // case 'x': w.back(); Serial.println("x"); break;
+      // case 'a': w.forwardLeft(); Serial.println("a"); break;
+      // case 'd': w.forwardRight(); Serial.println("d"); break;
+      // case 'z': w.backLeft(); Serial.println("z"); break;
+      // case 'c': w.backRight(); Serial.println("c"); break;
+      // case 's': w.stop(); Serial.println("s"); break;
+      // case '1': w.setSpeedLeft(75); Serial.println("1"); break;
+      // case '2': w.setSpeedLeft(200);  Serial.println("2"); break;
+      // case '9': w.setSpeedRight(75); Serial.println("9"); break;
+      // case '0': w.setSpeedRight(200); Serial.println("0"); break;
+      // case '5': w.setSpeed(100); Serial.println("5"); break;
+      case 's': car.measure(10, 180, r, c); break;
+      case 'i': printTable(r, c); Serial.println("Table printed"); break;
+    }
+  }
   
   // car.l7Start();
   // car.printSpeed();
@@ -128,6 +159,18 @@ void loop() {
 
   // car.runAndDodge(160);
   
+}
+
+void printTable(int row, int column){
+  int* table = new int[row*column];
+  EEPROM.get(0,table);
+  for(int i=0;i<row*column;i++){
+      if(i%column==0&&i!=0){
+        Serial.print('\n');
+      }
+      Serial.print(String(table[i])+" ");
+    }
+  delete[] table;
 }
 
 void TimerISR(){

@@ -235,22 +235,31 @@ void Car::rotateByWheels(int degree, uint8_t sp) {
     this->w.getCounters(left, right);
     
     // TODO zmierzyć stała tutaj *|/
-    int dist = abs(degree);
+    double var = 0.18;
+    int dist = abs(degree)* var;
 
-    while(left-ogLeft<dist){
-      if (degree > 0) {
-        // this->w.speedLeft = 160;
-        // this->w.speedRight = -160;
+
+    if (degree > 0) {
+      // this->w.speedLeft = 160;
+      // this->w.speedRight = -160;
+      while(right-ogRight<dist){
         this->w.forwardLeft();
         this->w.backRight();
-      } else if (degree < 0) {
-        // this->w.speedLeft = 160;
-        // this->w.speedRight = -160;
+        this->w.getCounters(left, right);
+      }
+    } else if (degree < 0) {
+      // this->w.speedLeft = 160;
+      // this->w.speedRight = -160;
+      while(left-ogLeft<dist){
         this->w.backLeft();
         this->w.forwardRight();
+        this->w.getCounters(left, right);
       }
-      this->w.getCounters(left, right);
+      
     }
+
+
+    
     
   
   this->w.stop();
@@ -334,28 +343,79 @@ void Car::l7Start(){
   
 }
 
-void Car::measure(int dist = 10, int row = 3, int column = 3){
+void Car::measure(int dist = 10,int speed = 180, int row = 3, int column = 3){
+  attachCompass();
+
   int* table = new int[row * column];
   
+  this->compass->read();
+  table[0]=this->compass->getAzimuth();
+  int og=0;
+  int curr;
+  int delta;
+
+  this->compass->read();
+  og=this->compass->getAzimuth();
+  int target=og;
+    
   for(int i=0;i<row*column;i++){
-    table[i]=this->compass->getAzimuth();
-    if(i%column==0&&i!=0){
-      this->rotateByWheels(90, 160);
-      this->goForward(dist, 160);
-      this->rotateByWheels(90, 160);
+    this->compass->read();
+    curr=this->compass->getAzimuth();
+
+    target=og;
+    
+    if ((i/column) % 2 == 1) {
+    target += 180;
+
+    if (target > 180)
+        target -= 360;
+    }
+
+    delta=curr-target;
+
+    if(delta>180){
+      delta-=360;
+    }else if(delta<-180){
+      delta+=360;
+    }
+
+    table[i]=delta;
+    this->lcd->print(String(this->compass->getAzimuth()));
+    if(i%column==0&&i!=0&&i%2==0){
+      this->rotateByWheels(90, speed);
+      this->goForward(dist, speed);
+      this->rotateByWheels(90, speed);
+    }else if(i%column==0&&i!=0&&i%2==1){
+      this->rotateByWheels(-90, speed);
+      this->goForward(dist, speed);
+      this->rotateByWheels(-90, speed);
     }else{
-      this->goForward(dist, 160);
+      this->goForward(dist, speed);
     }
   }
 
-  Serial.print(String(table[0])+" ");
+  EEPROM.put(0,table);
 
-  for(int i=1;i<row*column;i++){
-    table[i]=abs(abs(table[0])-abs(table[i]));
-    Serial.print(String(table[0])+" ");
-    if(i%column==0){
-      Serial.print('\n');
-    }
+  delete[] table;
+
+  // for(int j=0;j<100;j++){
+  //   delay(1000);
+  //   Serial.println("Wypisuje tablice:");
+  //   for(int i=0;i<row*column;i++){
+  //     if(i%column==0&&i!=0){
+  //       Serial.print('\n');
+  //     }
+  //     Serial.print(String(table[i])+" ");
+  //   }
+  // }
+  // Serial.print('\n');
+
+}
+
+void Car::liveCompass(){
+  while(true){
+    this->compass->read();
+    delay(25);
+    this->lcd->print(String(this->compass->getAzimuth()));
   }
-
 }

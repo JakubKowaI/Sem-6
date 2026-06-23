@@ -64,18 +64,18 @@ gcd_int(A, B, G) :-
     R is A mod B,
     gcd_int(B, R, G).
 
-totient(N, T) :-
+totient(N, T) :- 
     N =< 0,
     T is 0.
-totient(N, T) :-
+totient(N, T) :- 
     N > 0,
     totient_count(N, 1, 0, T).
 
-totient_count(N, K, Acc, T) :-
+totient_count(N, K, Acc, T) :- 
     K > N,
     T is Acc.
-totient_count(N, K, Acc, T) :-
-    K =< N,
+totient_count(N, K, Acc, T) :-  
+    K =< N, !,
     gcd_int(K, N, G),
     (G =:= 1 -> Acc1 is Acc + 1 ; Acc1 is Acc),
     K1 is K + 1,

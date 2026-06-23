@@ -77,6 +77,8 @@ public:
 
   void l7Start();
 
-  void measure(int dist = 10, int row = 3, int column = 3);
+  void measure(int dist = 10, int speed = 180, int row = 3, int column = 3);
+
+  void liveCompass();
 
 };

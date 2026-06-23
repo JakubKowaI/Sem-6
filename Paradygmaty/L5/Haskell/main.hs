@@ -89,4 +89,5 @@ isPrime m
     limit = floor (sqrt (fromIntegral m :: Double)) :: Integer
 
 main :: IO ()
-main = pure ()
+main = do
+  print (totient 20260611)
