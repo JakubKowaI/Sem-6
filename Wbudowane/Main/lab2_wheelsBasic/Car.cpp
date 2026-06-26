@@ -357,6 +357,7 @@ void Car::measure(int dist = 10,int speed = 180, int row = 3, int column = 3){
   this->compass->read();
   og=this->compass->getAzimuth();
   int target=og;
+  bool forward=1;
     
   for(int i=0;i<row*column;i++){
     this->compass->read();
@@ -364,12 +365,12 @@ void Car::measure(int dist = 10,int speed = 180, int row = 3, int column = 3){
 
     target=og;
     
-    if ((i/column) % 2 == 1) {
-    target += 180;
+    // if ((i/column) % 2 == 1) {
+    // target += 180;
 
-    if (target > 180)
-        target -= 360;
-    }
+    // if (target > 180)
+        // target -= 180;
+    // }
 
     delta=curr-target;
 
@@ -379,22 +380,46 @@ void Car::measure(int dist = 10,int speed = 180, int row = 3, int column = 3){
       delta+=360;
     }
 
-    table[i]=delta;
+    table[i]=abs(delta);
     this->lcd->print(String(this->compass->getAzimuth()));
+    
     if(i%column==0&&i!=0&&i%2==0){
-      this->rotateByWheels(90, speed);
-      this->goForward(dist, speed);
-      this->rotateByWheels(90, speed);
+      // this->rotateByWheels(90, speed);
+      // this->goForward(dist, speed);
+      // this->rotateByWheels(90, speed);
+      if(forward){
+        // Serial.print("Going back");
+        forward=0;
+      }else{
+        // Serial.print("Going forward");
+        forward=1;
+      }
     }else if(i%column==0&&i!=0&&i%2==1){
-      this->rotateByWheels(-90, speed);
-      this->goForward(dist, speed);
-      this->rotateByWheels(-90, speed);
+      // this->rotateByWheels(-90, speed);
+      // this->goForward(dist, speed);
+      // this->rotateByWheels(-90, speed);
+      if(forward){
+        // Serial.print("Going back");
+        forward=0;
+      }else{
+        // Serial.print("Going forward");
+        forward=1;
+      }
     }else{
-      this->goForward(dist, speed);
+      if(forward){
+        this->goForward(dist, speed);
+      }else{
+        this->goBack(dist, speed);
+      }
+      
     }
   }
 
-  EEPROM.put(0,table);
+  int addr = 0;
+  for (int i = 0; i < row * column; i++) {
+    EEPROM.put(addr, table[i]);
+    addr += sizeof(int);
+  }
 
   delete[] table;
 

@@ -34,7 +34,7 @@ Car car;
 volatile char cmd;
 
 int r = 3;
-int c = 3;
+int c = 30;
 
 
 bool isLCDConnected() {
@@ -62,7 +62,7 @@ void setup() {
 
   if(isCompassConnected()){
     Serial.println("Compass attached!");
-    car.attachCompass();
+    // car.attachCompass();
   }else{
     Serial.println("Compass not detected!");
   }
@@ -100,13 +100,14 @@ void setup() {
 
   // car.liveCompass();
 
-  int table[9];
-  EEPROM.get(0,table);
+  // int table[9];
+  // EEPROM.get(0,table);
+  // car.lcd->printCountdown("Measure in", 10); car.measure(10, 200, r, c);
 }
 
 void loop() {
 
-
+  // Serial.println("Starting listening");
   while(Serial.available())
   {
     cmd = Serial.read();
@@ -124,7 +125,7 @@ void loop() {
       // case '9': w.setSpeedRight(75); Serial.println("9"); break;
       // case '0': w.setSpeedRight(200); Serial.println("0"); break;
       // case '5': w.setSpeed(100); Serial.println("5"); break;
-      case 's': car.measure(10, 180, r, c); break;
+      case 's': car.lcd->printCountdown("Measure in", 10); car.measure(10, 170, r, c); break;
       case 'i': printTable(r, c); Serial.println("Table printed"); break;
     }
   }
@@ -162,15 +163,22 @@ void loop() {
 }
 
 void printTable(int row, int column){
-  int* table = new int[row*column];
-  EEPROM.get(0,table);
+  int* table = new int[row * column];
+
+  int addr = 0;
+  for (int i = 0; i < row * column; i++) {
+    EEPROM.get(addr, table[i]);
+    addr += sizeof(int);
+  }
+
   for(int i=0;i<row*column;i++){
+    Serial.print(String(table[i])+" ");
       if(i%column==0&&i!=0){
         Serial.print('\n');
       }
-      Serial.print(String(table[i])+" ");
+      
     }
-  delete[] table;
+  // delete[] table;
 }
 
 void TimerISR(){
