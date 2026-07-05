@@ -10,39 +10,33 @@
 \usepackage{graphicx}
 \usepackage{hyperref}
 \usepackage{float}
+\usepackage[usenames,dvipsnames]{xcolor}
 
 \geometry{top=2.5cm, bottom=2.5cm, left=2.5cm, right=2.5cm}
 
-% Konfiguracja listowania kodu dla języka Julia
 \lstdefinelanguage{Julia}%
   {morekeywords={abstract,break,case,catch,const,continue,do,else,elseif,%
       end,export,false,for,function,immutable,import,importall,if,in,%
-      macro,module,mustcontain,type,typealias,using,true,while,struct},%
+      macro,module,otherwise,quote,return,switch,true,try,type,typealias,%
+      using,while},%
    sensitive=true,%
-   morecomment=[l]{\#},%
-   morecomment=[s]{{\#=}}{={\#}},%
-   morestring=[b]",%
-   morestring=[m]'%
-}[keywords,comments,strings]
+   alsoother={$},%
+   morecomment=[l]\#,%
+   morecomment=[n]{\#=}{=\#},%
+   morestring=[s]{"}{"},%
+   morestring=[m]{'}{'},%
+}[keywords,comments,strings]%
 
-\lstset{
-    language=Julia,
-    backgroundcolor=\color{gray!5},
-    basicstyle=\small\ttfamily,
-    keywordstyle=\color{blue}\bfseries,
-    commentstyle=\color{green!50!darkgray}\italicshape,
-    stringstyle=\color{purple},
-    numbers=left,
-    numberstyle=\tiny\color{gray},
-    stepnumber=1,
-    numbersep=8pt,
-    frame=single,
-    rulecolor=\color{gray!30},
-    breaklines=true,
-    captionpos=b
+\lstset{%
+    language         = Julia,
+    basicstyle       = \ttfamily,
+    keywordstyle     = \bfseries\color{blue},
+    stringstyle      = \color{magenta},
+    commentstyle     = \color{ForestGreen},
+    showstringspaces = false,
 }
 
-\title{\textbf{Sprawozdanie 3}\\Wybrane Zagadnienia Algebry}
+\title{\textbf{Sprawozdanie: Bazy Groebnera i ich zastosowania}\\Wybrane Zagadnienia Algebry}
 \author{Jakub Kowal\\279706}
 \date{}
 
@@ -51,190 +45,161 @@
 \maketitle
 
 \section{Wstęp i implementacja pierścieni wielomianów wielu zmiennych}
+Implementacja pierścienia wielomianów wielu zmiennych $R[x_1, \dots, x_n]$ bazuje bezpośrednio na strukturach zaimplementowanych na poprzedniej liście zadań. Główną różnicą w stosunku do wariantu jednej zmiennej jest reprezentacja wykładników jednomianów za pomocą wektora liczb całkowitych ($\mathtt{Vector\{Int\}}$) pełniącego funkcję klucza w strukturze słownikowej współczynników. Dodatkowo, w przestrzeni wielowymiarowej konieczne jest jawne zdefiniowanie oraz stosowanie abstrakcyjnej relacji porządku jednomianów (np. leksykograficznego $\mathtt{LexOrder}$), co umożliwia jednoznaczne wyznaczanie wyrazu wiodącego wielomianu.
 
-\subsection{Różnice w implementacji względem wielomianów jednej zmiennej}
-Implementacja pierścienia wielomianów wielu zmiennych $R[x_1, \dots, x_n]$ wykazuje istotne różnice strukturalne i algorytmiczne w porównaniu do wielomianów jednej zmiennej:
-\begin{itemize}
-    \item \textbf{Reprezentacja wykładników:} W przypadku jednej zmiennej wykładnik jednomianu reprezentowany jest przez pojedynczą liczbę całkowitą (klucz w słowniku lub indeks w tablicy). W wielu zmiennych konieczne jest zastosowanie wektora liczb całkowitych ($\mathtt{Vector\{Int\}}$), gdzie każdy element odpowiada potędze przypisanej do konkretnej zmiennej (np. wektor $[2, 1, 0]$ oznacza $x_1^2 x_2^1 x_3^0$).
-    \item \textbf{Porządek jednomianów (Monomial Order):} Dla jednej zmiennej relacja porządku jest trywialna (wyższy stopień dominuje). W przestrzeni wielowymiarowej nie istnieje jeden naturalny porządek. Wymaga to jawnego zdefiniowania relacji takich jak porządek leksykograficzny ($\mathtt{LexOrder}$) czy stopniowany leksykograficzny ($\mathtt{GradedLexOrder}$), które są kluczowe dla jednoznacznego wyznaczenia wyrazu wiodącego ($\mathtt{leading\_term}$).
-    \item \textbf{Zgodność wymiarów:} Struktura wielomianu wielu zmiennych musi jawnie przechowywać informację o liczbie obsługiwanych zmiennych ($\mathtt{nvars}$), aby uniemożliwić błędy semantyczne podczas dodawania lub mnożenia obiektów należących do różnych przestrzeni.
-\end{itemize}
+\section{Zaimplementowane algorytmy i analiza kodu}
+W celu wyznaczania baz Groebnera zaimplementowano trzy fundamentalne operacje algebraiczne. Poniżej przedstawiono i omówiono ich struktury programistyczne.
 
-\section{Zaimplementowane algorytmy}
+\subsection{Redukcja wielomianowa (PolynomialReduce)}
+Procedura realizuje wielowymiarowe dzielenie wielomianu $f$ przez tablicę wielomianów redukujących $G$. W pętli sprawdzane jest, czy wyraz wiodący aktualnej reszty dzieli się przez wyraz wiodący któregokolwiek z wielomianów z bazy. Jeśli tak, następuje redukcja (odjęcie odpowiedniej krotności wielomianu generatora). W przeciwnym razie wyraz wiodący jest przenoszony do ostatecznego wektora reszty.
 
-Poniżej przedstawiono kody źródłowe kluczowych operacji algebraicznych zrealizowanych w języku Julia, stanowiących rozszerzenie dostarczonej biblioteki bazowej.
+\subsection{S-wielomiany (Syzygium)}
+Funkcja \texttt{Syzygium} służy do eliminowania najwyższych składników pary wielomianów $f$ i $g$ poprzez wyznaczenie najmniejszej wspólnej wielokrotności ($\mathtt{lcm\_exp}$) ich wektorów wykładników wiodących.
 
-\subsection{S-wielomian (Syzygium)}
-S-wielomian służy do eliminacji wyrazów wiodących pary wielomianów w celu wyszukiwania nowych relacji w ideale.
-\begin{lstlisting}[caption={Implementacja wyznaczania S-wielomianu}]
-function lcm_exp(e1::Vector{Int}, e2::Vector{Int})
-    return max.(e1, e2)
-end
-
+\begin{lstlisting}[language=Julia, caption=Implementacja wyznaczania S-wielomianu]
 function Syzygium(f::Wielomian{T}, g::Wielomian{T}, order::MonomialOrder) where T
     e_f, c_f = leading_term(f, order)
     e_g, c_g = leading_term(g, order)
     
-    e_lcm = lcm_exp(e_f, e_g)
+    e_lcm = max.(e_f, e_g) # Najmniejsza wspolna wielokrotnosc
     
-    exp_mult_f = e_lcm .- e_f
-    t_f = monomial(one(T) / c_f, exp_mult_f, f.nvars)
-    
-    exp_mult_g = e_lcm .- e_g
-    t_g = monomial(one(T) / c_g, exp_mult_g, g.nvars)
+    t_f = monomial(one(T) / c_f, e_lcm .- e_f, f.nvars)
+    t_g = monomial(one(T) / c_g, e_lcm .- e_g, g.nvars)
     
     return (t_f * f) - (t_g * g)
 end
 \end{lstlisting}
 
 \subsection{Algorytm Buchbergera}
-Algorytm generuje bazę Groebnera poprzez ciągłe obliczanie S-wielomianów i redukowanie ich względem aktualnego zbioru generatorów aż do momentu, gdy wszystkie reszty redukcji będą równe zero.
-\begin{lstlisting}[caption={Implementacja Algorytmu Buchbergera}]
+Główna funkcja wyznaczająca bazę Groebnera. Działa w oparciu o kryterium sprawdzania wszystkich par wielomianów w bazie. Jeśli S-wielomian danej pary nie redukuje się do zera względem aktualnego zbioru $G$, jego niezerowa reszta jest dołączana jako nowy generator, co rozszerza listę par do sprawdzenia.
+
+\begin{lstlisting}[language=Julia, caption=Algorytm generowania baz Groebnera]
 function Buchberger(F::Vector{Wielomian{T}}, order::MonomialOrder) where T
     G = copy(F)
     pairs = Tuple{Wielomian{T}, Wielomian{T}}[]
-    for i in 1:length(G)
-        for j in (i+1):length(G)
-            push!(pairs, (G[i], G[j]))
-        end
+    for i in 1:length(G), j in (i+1):length(G)
+        push!(pairs, (G[i], G[j]))
     end
     
     while !isempty(pairs)
-        (f, g) = popfirst!(pairs)
+        f, g = popfirst!(pairs)
         S = Syzygium(f, g, order)
-        _, r = PolynomialReduce(S, G, order)
+        _, rem_poly = PolynomialReduce(S, G, order)
         
-        if !isempty(r.coeffs)
-            for p in G
-                push!(pairs, (p, r))
+        if !isempty(rem_poly.coeffs) # Reszta rozna od zera
+            for g_el in G
+                push!(pairs, (g_el, rem_poly))
             end
-            push!(G, r)
+            push!(G, rem_poly)
         end
     end
     return G
 end
 \end{lstlisting}
 
-\section{Analiza układów równań (Punkt c)}
-Rozważamy bazowy układ równań reprezentujący stożek $x^2 - y^2 = z^2$ (równoważnie $x^2 - y^2 - z^2 = 0$) oraz pięć wariantów wielomianu liniowego $f(x,y,z)=0$. Eliminacja zmiennej $z$ zachodzi przy użyciu porządku leksykograficznego o wadze $z > y > x$.
+\section{Analiza układów równań i przekrojów stożka (Punkt c)}
+Badamy bazowy układ równań reprezentujący stożek trójwymiarowy $x^2 + y^2 - z^2 = 0$ przy pięciu wariantach płaszczyzn liniowych $f(x,y,z)=0$. Eliminacja zmiennej $z$ została zrealizowana poprzez obliczenie bazy Groebnera w porządku leksykograficznym $z > y > x$.
 
-\subsection{Wariant 1: $f(x,y,z) = 8z$}
-\textbf{Wynik z programu:} $\{-x^2 + y^2, \, 8.0z, \, x^2 - y^2 - z^2\}$ \\
-\textbf{Wyznaczenie ideału:} Z równania $8z=0$ wynika $z=0$. Podstawiając do stożka otrzymujemy generator $I_f = \langle x^2 - y^2 \rangle$. \\
-\textbf{Uzasadnienie geometryczne:} Równanie $x^2 - y^2 = 0$ można rozpisać jako $(x-y)(x+y)=0$, co reprezentuje \textbf{dwie przecinające się proste} $y=x$ oraz $y=-x$. Jest to geometryczny efekt przecięcia płaszczyzny wierzchołkowej $z=0$ ze stożkiem.
-
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.5\textwidth]{plots/wykres_c1.png}
-    \caption{Wizualizacja rozmaitości $V(I_f)$ dla wariantu 1.}
-\end{figure}
-
-\subsection{Wariant 2: $f(x,y,z) = z - 8$}
-\textbf{Wynik z programu:} $\{-x^2 + y^2 + 64.0, \, z - 8.0, \, x^2 - y^2 - z^2\}$ \\
-\textbf{Wyznaczenie ideału:} Eliminując $z$ otrzymujemy $I_f = \langle x^2 - y^2 - 64 \rangle$. \\
-\textbf{Uzasadnienie geometryczne:} Jest to klasyczna \textbf{hiperbola} o osi rzeczywistej wzdłuż osi X. Przecięcie stożka płaszczyzną poziomą $z=8$ (równoległą do podstawy) generuje krzywą stożkową będącą hiperbolą.
-
+\subsection{Wariant 1: $f(x,y,z) = 10z$}
+\textbf{Wyznaczenie ideału:} Z układu wynika bezpośrednio $z=0$, co po podstawieniu daje $I_f = \langle x^2 + y^2 \rangle \subset \mathbb{R}[x,y]$. \\
+\textbf{Uzasadnienie geometryczne:} Jedynym punktem spełniającym to równanie w dziedzinie rzeczywistej jest $(0,0)$. Przedstawia ono \textbf{punkt osobliwy}, będący wierzchołkiem stożka wyciętym przez płaszczyznę przechodzącą przez jego środek symetrii.
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.5\textwidth]{plots/wykres_c2.png}
-    \caption{Wizualizacja rozmaitości $V(I_f)$ dla wariantu 2.}
+    \includegraphics[width=0.42\textwidth]{plots/wykres_c1.png}
+    \caption{Wizualizacja rozmaitości $V(I_f)$ dla wariantu 1 (odizolowany punkt).}
 \end{figure}
 
-\subsection{Wariant 3: $f(x,y,z) = x - z + 1$}
-\textbf{Wynik z programu:} $\{2.0x + y^2 + 1.0, \, x - z + 1.0, \, x^2 - y^2 - z^2\}$ \\
-\textbf{Wyznaczenie ideału:} Z bazy odczytujemy $I_f = \langle y^2 + 2x + 1 \rangle$. \\
-\textbf{Uzasadnienie geometryczne:} Przekształcając równanie otrzymujemy $x = -\frac{1}{2}y^2 - \frac{1}{2}$. Jest to \textbf{parabola} skierowana ramionami w lewą stronę osi X. Powstaje ona, ponieważ płaszczyzna tnąca $z = x + 1$ jest ściśle równoległa do tworzącej stożka.
+\subsection{Wariant 2: $f(x,y,z) = z + 8$}
+\textbf{Wyznaczenie ideału:} Eliminując $z$, otrzymujemy wielomian generujący $I_f = \langle x^2 + y^2 - 64 \rangle$. \\
+\textbf{Uzasadnienie geometryczne:} Jest to \textbf{okrąg} o promieniu $R=8$. Przecięcie pionowego stożka idealnie poziomą płaszczyzną ($z=-8$) generuje przekrój kołowy.
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.5\textwidth]{plots/wykres_c3.png}
-    \caption{Wizualizacja rozmaitości $V(I_f)$ dla wariantu 3.}
+    \includegraphics[width=0.42\textwidth]{plots/wykres_c2.png}
+    \caption{Wizualizacja rozmaitości $V(I_f)$ dla wariantu 2 (okrąg).}
 \end{figure}
 
-\subsection{Wariant 4: $f(x,y,z) = x - y - z - 7$}
-\textbf{Wynik z programu:} $\{-2.0xy - 14.0x + 2.0y^2 + 14.0y + 49.0, \, \dots\}$ \\
-\textbf{Wyznaczenie ideału:} Wyeliminowany wielomian definiuje generator $I_f = \langle 2y^2 - 2xy - 14x + 14y + 49 \rangle$. \\
-\textbf{Uzasadnienie geometryczne:} Obecność mieszanego członu $-2xy$ wskazuje na \textbf{hiperbolę ukośną} (obróconą względem osi układu współrzędnych). Wynika to z faktu, że płaszczyzna tnąca przecina obie części stożka pod kątem niesymetrycznym do jego głównych osi obrotu.
+\subsection{Wariant 3: $f(x,y,z) = x + z - 1$}
+\textbf{Wyznaczenie ideału:} Wynikowy wielomian eliminacyjny to $I_f = \langle y^2 + 2x - 1 \rangle$. \\
+\textbf{Uzasadnienie geometryczne:} Po przekształceniu otrzymujemy równanie $x = -\frac{1}{2}y^2 + \frac{1}{2}$, co definiuje \textbf{parabolę}. Taki kształt powstaje, ponieważ nachylenie płaszczyzny tnącej jest idealnie równoległe do tworzącej stożka.
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.5\textwidth]{plots/wykres_c4.png}
-    \caption{Wizualizacja rozmaitości $V(I_f)$ dla wariantu 4.}
+    \includegraphics[width=0.42\textwidth]{plots/wykres_c3.png}
+    \caption{Wizualizacja rozmaitości $V(I_f)$ dla wariantu 3 (parabola).}
 \end{figure}
 
-\subsection{Wariant 5: $f(x,y,z) = 0.5y - z - 1$}
-\textbf{Wynik z programu:} $\{-x^2 + 1.25y^2 - y + 1.0, \, \dots\}$ \\
-\textbf{Wyznaczenie ideału:} Mnożąc wynik programu przez $-4$, otrzymujemy czystą postać algebraiczną: $I_f = \langle 4x^2 - 5y^2 + 4y - 4 \rangle$. \\
-\textbf{Uzasadnienie geometryczne:} Przeciwne znaki przy współczynnikach $x^2$ (dodatni) oraz $y^2$ (ujemny) jednoznacznie definiują \textbf{hiperbolę} ze środkiem przesuniętym wzdłuż osi Y z powodu obecności składnika liniowego $+4y$.
+\subsection{Wariant 4: $f(x,y,z) = x + y + z + 7$}
+\textbf{Wyznaczenie ideału:} Wielomian generujący przybiera postać $I_f = \langle 2xy + 14x + 14y + 49 \rangle$. \\
+\textbf{Uzasadnienie geometryczne:} Obecność wyłącznie składnika mieszanego $2xy$ definiuje \textbf{hiperbolę ukośną} (obróconą o kąt $45^\circ$). Płaszczyzna przecina obie połówki stożka.
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.5\textwidth]{plots/wykres_c5.png}
-    \caption{Wizualizacja rozmaitości $V(I_f)$ dla wariantu 5.}
+    \includegraphics[width=0.42\textwidth]{plots/wykres_c4.png}
+    \caption{Wizualizacja rozmaitości $V(I_f)$ dla wariantu 4 (hiperbola).}
 \end{figure}
 
-% \begin{figure}[htbp]
-    % \centering
-    %\includegraphics[width=0.5\textwidth]{warianty_c.png}
-    % \caption{Wizualizacja rozmaitości $V(I_f)$ dla wariantów 1-5 (wykresy wygenerowane zewnętrznie).}
-% \end{figure}
+\subsection{Wariant 5: $f(x,y,z) = 0.5y + z + 1$}
+\textbf{Wyznaczenie ideału:} Otrzymany wielomian eliminacyjny to $I_f = \langle 4x^2 + 3y^2 - 4y - 4 \rangle$. \\
+\textbf{Uzasadnienie geometryczne:} Dodatnie i nierówne współczynniki przy $x^2$ oraz $y^2$ ($4$ oraz $3$) jednoznacznie reprezentują algebraiczną \textbf{elipsę}, której środek jest przesunięty wzdłuż osi Y przez czynnik liniowy $-4y$.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.42\textwidth]{plots/wykres_c5.png}
+    \caption{Wizualizacja rozmaitości $V(I_f)$ dla wariantu 5 (elipsa).}
+\end{figure}
 
 \section{Układ wyższych rzędów i eliminacja zmiennej (Punkt d)}
-Rozważamy układ:
+Rozważamy układ równań stopnia czwartego:
 $\begin{cases}
-(x^2 - y^2 + 2x)^2 = z^2(x^2 - y^2) \\
+(x^2 + y^2 - 2x)^2 = z^2(x^2 + y^2) \\
 x - 2y - 3z = 0
 \end{cases}$
 
 \subsection{Eliminacja zmiennej $x$}
-Zgodnie z wykonanym testem, program dla porządku leksykograficznego wypluł wielomian eliminacyjny niezależny od $x$:
-\[ 9y^4 + 72y^3z + 24y^3 + 195y^2z^2 + 132y^2z + 16y^2 + 204yz^3 + 216yz^2 + 48yz + 72z^4 + 108z^3 + 36z^2 = 0 \]
-Wykres tego równania w zmiennych $(y,z)$ przedstawia algebraiczną krzywą rzutu na płaszczyznę YZ, posiadającą izolowane punkty osobliwe wynikające z geometrii przecięcia kwartyki z płaszczyzną.
+Korzystając z relacji porządku leksykograficznego $x > y > z$, program wyeliminował zmienną $x$ dając wielomian stopnia czwartego w zmiennych $y$ i $z$:
+\[ 25y^4 + 120y^3z + 229y^2z^2 + 204yz^3 + 72z^4 - 40y^3 - 156y^2z - 216yz^2 - 108z^3 + 16y^2 + 48yz + 36z^2 = 0 \]
+Wykres przedstawia rzut geometryczny przecięcia podanych trójwymiarowych powierzchni na płaszczyznę YZ.
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.5\textwidth]{plots/wykres_d1.png}
-    \caption{Wykres rozwiązania układu w zmiennych y i z (rzut na płaszczyznę YZ).}
+    \includegraphics[width=0.48\textwidth]{plots/wykres_d1.png}
+    \caption{Rzut rozwiązania układu na płaszczyznę YZ.}
 \end{figure}
 
 \subsection{Analiza przekroju dla $z=2$}
-Podstawiając stałą $z = a = 2$ do pierwszego równania układu, otrzymujemy:
-\[ (x^2 - y^2 + 2x)^2 = 4(x^2 - y^2) \]
-
-Wykres tego równania na płaszczyźnie XY tworzy krzywą algebraiczną czwartego stopnia zwaną \textbf{krzywą gruszkowatą} (ang. \textit{piriform curve}, lub zniekształconą lemniskatą). Posiada ona charakterystyczny węzeł (samoprzecięcie) w początku układu współrzędnych $(0,0)$, co jest bezpośrednią konsekwencją zerowania się składników niższych rzędów w tym punkcie.
+Podstawiając wartość $z=a=2$ bezpośrednio do pierwszego równania, otrzymujemy relację dwuwymiarową:
+\[ (x^2 + y^2 - 2x)^2 = 4(x^2 + y^2) \]
+Wykres tego przekroju generuje \textbf{kardioidę}. W układzie współrzędnych biegunowych ($x=r\cos\theta, y=r\sin\theta$) równanie to upraszcza się do klasycznej postaci sercowatej: $r = 2(1 + \cos\theta)$.
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.5\textwidth]{plots/wykres_d2.png}
-    \caption{Wykres rozwiązania pierwszego równania układu w zmiennych x i y, dla z = 2.}
+    \includegraphics[width=0.48\textwidth]{plots/wykres_d2.png}
+    \caption{Przekrój powierzchni dla z = 2 (Kardioida).}
 \end{figure}
 
 \section{Wyznaczanie wzoru trysektrysy (Punkt e)}
-Trysektrysa we współrzędnych biegunowych zadana jest jako:
-\[ r = 7\frac{4\cos\theta - 1}{\cos\theta} \]
+Krzywa zadana jest w układzie biegunowym jako: $r = 7\frac{4\cos\theta - 1}{\cos\theta}$.
 
-\subsection{Przejście do współrzędnych kartezjańskich za pomocą Bazy Groebnera}
-Do programu wprowadzono układ powiązany z definicją zmiany układu współrzędnych ($z$ reprezentuje promień $r$):
-1) Relacja biegunowa po wymnożeniu: $zx + 7z - 28x = 0$ \\
+\subsection{Postać kartezjańska z bazy Groebnera}
+Do programu wprowadzono układ powiązany z definicją przejścia między układami współrzędnych (gdzie $z$ reprezentuje promień $r$):
+1) Równanie biegunowe po przekształceniu: $zx + 7z - 28x = 0$ \\
 2) Definicja promienia: $z^2 - x^2 - y^2 = 0$
 
-Wykonanie algorytmu Buchbergera zwróciło wielomian eliminacyjny czwartego stopnia:
-\[ -0.00510204x^4 - 0.07142857x^3 - 0.00510204x^2y^2 + 3.75x^2 - 0.07142857xy^2 - 0.25y^2 = 0 \]
-Mnożąc całe równanie przez $-196$ (gdyż $0.00510204 \approx \frac{1}{196}$), uzyskujemy dokładną postać całkowitoliczbową:
+Wyznaczenie bazy Groebnera z eliminacją zmiennej $z$ dało ostateczny wzór wielomianowy we współrzędnych kartezjańskich:
 \[ x^4 + 14x^3 + x^2y^2 - 735x^2 + 14xy^2 + 49y^2 = 0 \]
-Krzywa ta posiada pętlę przechodzącą przez środek układu oraz dwa ramiona dążące do asymptoty pionowej $x = -7$.
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.5\textwidth]{plots/wykres_e.png}
-    \caption{Wizualizacja Trysektrysy.}
+    \includegraphics[width=0.48\textwidth]{plots/wykres_e.png}
+    \caption{Wizualizacja graficzna Trysektrysy Maclaurina.}
 \end{figure}
 
-\subsection{Zjawisko numeryczne w punkcie (e)}
-Wydruk z bazy Groebnera zawierał końcowe linie typu $1.16\times 10^{-10}x^2$ oraz $-49.0y^2$. Jest to klasyczny przejaw \textbf{niestabilności numerycznej algorytmu Buchbergera} wywołanej stosowaniem arytmetyki zmiennoprzecinkowej ($\tt{Float64}$). W wyniku wielokrotnych dzieleń i odejmowań współczynników, wartości, które teoretycznie powinny wynosić zero, osiągnęły małe wartości niezerowe (błąd zaokrągleń maszynowych). Spowodowało to błędne uznanie tych reszt za nowe elementy bazy i wygenerowało zbędny "ogon" numeryczny.
+\subsection{Zastosowanie geometryczne trysektrysy}
+Trysektrysa Maclaurina jest algebraiczną krzywą płaską służącą do geometrycznego rozwiązania problemu \textbf{trysekcji kąta} — czyli podziału dowolnego kąta na trzy równe części. Klasyczny dowód algebraiczy potwierdza, że operacja ta jest niewykonalna przy użyciu wyłącznie cyrkla i nieoznaczonej linijki. Zastosowanie gotowej krzywej płaskiej wyższego rzędu w pełni umożliwia taką konstrukcję.
 
-\subsection{Zastosowanie trysektrysy}
-Trysektrysa (w tym przypadku trysektrysa Maclaurina) to słynna krzywa wyższego stopnia wykorzystywana w geometrii klasycznej do rozwiązania problemu \textbf{trysekcji kąta} — czyli podziału dowolnego kąta na trzy równe części. Udowodniono, że operacja ta jest niewykonalna przy użyciu wyłącznie cyrkla i nieoznaczonej linijki. Jednakże przyzwolenie na konstrukcję z wykorzystaniem gotowej krzywej płaskiej (jaką jest trysektrysa) w pełni umożliwia dokładne i konstrukcyjne podzielenie dowolnego kąta.
+\section*{Wykorzystanie Sztucznej Inteligencji}
+Sztuczna inteligencja została wykorzystana do automatyzacji generowania kodu szkieletu dokumentu LaTeX oraz optymalizacji formatowania tabelarycznego i bloków listingów programistycznych.
 
 \end{document}
